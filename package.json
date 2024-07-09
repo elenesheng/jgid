@@ -1,0 +1,45 @@
+{
+  "name": "daily-pom",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next-sitemap",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/next-js": "^2.2.0",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fontsource/lato": "^5.0.21",
+    "@fontsource/noto-sans": "^5.0.22",
+    "@fontsource/playfair-display": "^5.0.24",
+    "@sentry/nextjs": "^8.13.0",
+    "chakra-react-select": "^4.8.0",
+    "framer-motion": "^11.2.10",
+    "howler": "^2.2.4",
+    "i": "^0.3.7",
+    "lodash": "^4.17.21",
+    "next": "14.2.3",
+    "next-sitemap": "^4.2.3",
+    "npm": "^10.8.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "typeface-crimson-text": "^1.1.13",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.11",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.8",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "typescript": "^5"
+  }
+}
