@@ -7,7 +7,7 @@ import { ColorModeScript } from '@chakra-ui/react'
 import theme from './theme';
 import SessionProvider from "./SessionProvider";
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from './lib/utils/authOptions';
 
 export default async function RootLayout({
   children,
