@@ -10,11 +10,14 @@ import { TaskContext } from '@/app/contexts/TaskContext';
 import TaskInput from './task-input/TaskInput.component';
 import TaskItem from './task-item/TaskItem.component';
 import { Task } from '@/app/types/tasks';
+import { useSession } from "next-auth/react"
 
 const TodoComponent = () => {
   const { tasks } = useContext(TaskContext)!;
   const maxTasks = 7;
+  const { data: session, status } = useSession()
 
+  console.log(session)
   return (
     <Box borderWidth="1px" borderRadius="lg" p={0} m={0} borderColor="transparent">
       {tasks.length >= maxTasks && (

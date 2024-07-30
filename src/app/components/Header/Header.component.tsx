@@ -5,6 +5,7 @@ import { Box, Flex, Container } from "@chakra-ui/react";
 import Logo from "./Logo/Logo";
 import ThemeSwitcher from "@/app/components/theme/Theme";
 import SettingsModalContainer from "../settings";
+import UserProfile from "../AuthButton";
 
 const Header = () => {
   return (
@@ -22,7 +23,12 @@ const Header = () => {
           <Box>
             <Logo />
           </Box>
-          <ThemeSwitcher />
+          <Box>
+            <Flex>
+              <UserProfile />
+              <ThemeSwitcher />
+            </Flex>
+          </Box>
         </Flex>
       </Container>
     </Box>

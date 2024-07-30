@@ -43,3 +43,6 @@ build-log.txt
 
 # Ignore Next.js Image cache folder
 public/_next/image
+
+# Ignore Docker volumes and other files
+docker-compose.yml
