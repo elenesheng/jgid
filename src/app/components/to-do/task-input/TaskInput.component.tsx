@@ -7,11 +7,11 @@ import { TaskContext } from '@/app/contexts/TaskContext';
 
 const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
-    const { tasks, addTask, clearAllTasks } = useContext(TaskContext)!;
+    const { todos, addTodo, clearAllTodos } = useContext(TaskContext)!;
 
     const handleAddTask = () => {
         if (taskName.trim()) {
-            addTask(taskName, "");
+            addTodo(taskName, "");
             setTaskName('');
         }
     };
@@ -23,11 +23,11 @@ const TaskInput = () => {
         }
     };
 
-    const isTaskLimitReached = tasks.length >= 7;
+    const isTaskLimitReached = todos.length >= 7;
 
     return (
         <>
-            <Flex alignItems="flex-start" mt={tasks.length ===  0? 0: '25px'}>
+            <Flex alignItems="flex-start" mt={todos.length ===  0? 0: '25px'}>
                 <Input
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
@@ -45,7 +45,7 @@ const TaskInput = () => {
                 </Button>
             </Flex>
             <Flex align="center" justifyContent="space-between">
-                <Button mt="10px" w="100%" color="white" background="accent" variant={tasks.length == 0 ? "_disabled" : "primary"} size="md" onClick={() => clearAllTasks()}>Clear All Tasks</Button>
+                <Button mt="10px" w="100%" color="white" background="accent" variant={todos.length == 0 ? "_disabled" : "primary"} size="md" onClick={() => clearAllTodos()}>Clear All Tasks</Button>
             </Flex>
         </>
     );

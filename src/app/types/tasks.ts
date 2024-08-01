@@ -1,24 +1,28 @@
-export interface Task {
+export interface Todo {
     id: string;
     name: string;
+    description: string;
     completed: boolean;
     spentTime: number;
-    description: string;
+}
+export interface TodoContextType {
+    todos: Todo[];
+    loading: boolean;
+    addTodo: (name: string, description: string) => void;
+    removeTodo: (todoId: string) => void;
+    toggleTodoCompletion: (todoId: string) => void;
+    setSpentTime: (todoId: string, timeSpent: number) => void;
+    clearAllTodos: () => void;
+    chooseTodo: (todoId: string) => void;
+    selectedTodoId: string;
+    setSelectedTodoId: (todoId: string) => void;
+    editTodo: (todoId: string, name: string, description: string) => void;
 }
 
-export interface TaskContextType {
-    tasks: Task[];
-    activeTaskId: string | null;
-    selectedTaskId: string | null;
-    addTask: (name: string, description: string) => void;
-    removeTask: (taskId: string) => void;
-    toggleTaskCompletion: (taskId: string) => void;
-    chooseTask: (taskId: string) => void;
-    setSpentTime: (taskId: string, seconds: number) => void;
-    setSelectedTaskId: (taskId: string) => void;
-    clearAllTasks: () => void;
-    editTask: (taskId: string, title: string, description: string) => void;
-}
+export type QueuedOperation = {
+    type: 'add' | 'update' | 'delete' | 'clear';
+    payload: any;
+};
 
 export interface TaskButtonProps {
     isRunning: boolean;
@@ -26,7 +30,7 @@ export interface TaskButtonProps {
 }
 
 export interface TaskMenuProps {
-    tasks: Task[];
+    tasks: Todo[];
     handleSelectTask: (taskId: string) => void;
 }
 
