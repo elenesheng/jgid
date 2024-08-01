@@ -7,7 +7,9 @@
     "build": "next build && next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "migrate": "npx prisma migrate deploy",
+    "db_push": "npx prisma db push",
+    "postinstall": "next build && npm run migrate && npm run db_push"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
