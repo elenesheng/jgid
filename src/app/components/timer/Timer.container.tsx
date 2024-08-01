@@ -7,7 +7,7 @@ import useTimer from '../../hooks/useTimer';
 import { calculateInitialTimeLeft, calculateElapsedTimeInSeconds } from '@/app/lib/utils/timer';
 import TimerComponent from './Timer.component';
 import { Howl } from 'howler';
-import { Task } from '@/app/types/tasks';
+import { Todo } from '@/app/types/tasks';
 import { SOUNDS } from '@/app/lib/constants';
 
 const TimerContainer: React.FC = () => {
@@ -15,10 +15,10 @@ const TimerContainer: React.FC = () => {
     const timer = useContext(TimerStateContext)!
     const settings = useContext(SettingsStateContext)!;
     const {startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setTimeLeft, updateStartTime} = useContext(TimerControlsContext)!;
-    const { selectedTaskId, setSpentTime, tasks, setSelectedTaskId } = useContext(TaskContext)!;
+    const { selectedTodoId, setSpentTime, todos, setSelectedTodoId } = useContext(TaskContext)!;
     const { isRunning, sound } = settings;
     const { startTime, activeTab } = timer;
-    const selectedTask = tasks.find((task: Task) => task.id === selectedTaskId);
+    const selectedTask = todos.find((todo: Todo) => todo.id === selectedTodoId);
 
     const calculateInitialTime = (): number => {
         return calculateInitialTimeLeft({
@@ -30,8 +30,8 @@ const TimerContainer: React.FC = () => {
     const { isTimeUp, setIsTimeUp, timeLeft } = useTimer(calculateInitialTime(), isRunning);
 
     const handlePause = () => {
-        if (selectedTaskId && activeTab === 'work' && startTime) {
-            setSpentTime(selectedTaskId, calculateElapsedTimeInSeconds(startTime));
+        if (selectedTodoId && activeTab === 'work' && startTime) {
+            setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
         }
         setTimeLeft(timeLeft, activeTab);
         pauseTimer();
@@ -45,8 +45,8 @@ const TimerContainer: React.FC = () => {
     useEffect(() => {
         if (isTimeUp && isRunning) {
             setIsTimeUp(false);
-            if (selectedTaskId && activeTab === 'work' && startTime) {
-                setSpentTime(selectedTaskId, calculateElapsedTimeInSeconds(startTime));
+            if (selectedTodoId && activeTab === 'work' && startTime) {
+                setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
             }
             if (activeTab === 'rest') {
                 updateRestBreak();
@@ -67,17 +67,17 @@ const TimerContainer: React.FC = () => {
                 }
             }
         }
-    }, [isTimeUp, selectedTaskId, startTime, isRunning]);
+    }, [isTimeUp, selectedTodoId, startTime, isRunning]);
 
     useEffect(() => {
         if (selectedTask?.completed && isRunning) {
-            if (selectedTaskId && activeTab === 'work') {
-                setSpentTime(selectedTaskId, calculateElapsedTimeInSeconds(startTime));
-                setSelectedTaskId("");
+            if (setSelectedTodoId && activeTab === 'work') {
+                setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
+                setSelectedTodoId("");
                 resetWorkTimer();
             }
         }
-    }, [isRunning, tasks]);
+    }, [isRunning, todos]);
 
     useEffect(() => {
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {

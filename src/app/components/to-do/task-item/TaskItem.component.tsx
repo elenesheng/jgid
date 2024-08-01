@@ -8,7 +8,7 @@ import {
     Box,
 } from "@chakra-ui/react";
 import { TaskContext } from "@/app/contexts/TaskContext";
-import { Task } from "@/app/types/tasks";
+import { Todo } from "@/app/types/tasks";
 import EditTaskDrawer from "./EditTaskDrawer.component";
 import TaskItemMenu from "./TaskItemMenu.component";
 import { secondsToMinutes } from "@/app/lib/utils/timer";
@@ -16,8 +16,8 @@ import { trimText } from "@/app/lib/utils/timer";
 import { MAX_LENGTH_LONG } from "@/app/lib/constants";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
-const TaskItem = (task: Task) => {
-    const { removeTask, toggleTaskCompletion, editTask, setSelectedTaskId } =
+const TaskItem = (task: Todo) => {
+    const { removeTodo, toggleTodoCompletion, editTodo, setSelectedTodoId } =
         useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const { isRunning } = settings;
@@ -29,15 +29,15 @@ const TaskItem = (task: Task) => {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     const handleEditSubmit = () => {
-        editTask(id, editName, editDescription);
+        editTodo(id, editName, editDescription);
         onClose();
     };
 
     const onComplete = (id: string) => {
         if (!isRunning) {
-            setSelectedTaskId("");
+            setSelectedTodoId("");
         }
-        toggleTaskCompletion(id);
+        toggleTodoCompletion(id);
     };
 
     const toggleDescription = () => {
@@ -94,7 +94,7 @@ const TaskItem = (task: Task) => {
 
                 <Spacer />
                 <TaskItemMenu
-                    onRemove={() => removeTask(id)}
+                    onRemove={() => removeTodo(id)}
                     onComplete={() => onComplete(id)}
                     onEdit={onOpen}
                     completed={completed}
