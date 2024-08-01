@@ -9,7 +9,7 @@ import {
 import { TaskContext } from '@/app/contexts/TaskContext';
 import TaskInput from './task-input/TaskInput.component';
 import TaskItem from './task-item/TaskItem.component';
-import { Task } from '@/app/types/tasks';
+import { Todo } from '@/app/types/tasks';
 import { useSession } from "next-auth/react"
 
 const TodoComponent = () => {
@@ -25,7 +25,7 @@ const TodoComponent = () => {
           To stay focused, you can`t add more than 7 tasks.
         </Alert>
       )}
-      {todos.map((task: Task) => (
+      {todos.map((task: Todo) => (
         <TaskItem {...task} key={task.id} />
       ))}
       <TaskInput />

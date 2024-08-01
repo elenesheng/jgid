@@ -7,7 +7,7 @@ import useTimer from '../../hooks/useTimer';
 import { calculateInitialTimeLeft, calculateElapsedTimeInSeconds } from '@/app/lib/utils/timer';
 import TimerComponent from './Timer.component';
 import { Howl } from 'howler';
-import { Task } from '@/app/types/tasks';
+import { Todo } from '@/app/types/tasks';
 import { SOUNDS } from '@/app/lib/constants';
 
 const TimerContainer: React.FC = () => {
@@ -18,7 +18,7 @@ const TimerContainer: React.FC = () => {
     const { selectedTodoId, setSpentTime, todos, setSelectedTodoId } = useContext(TaskContext)!;
     const { isRunning, sound } = settings;
     const { startTime, activeTab } = timer;
-    const selectedTask = todos.find((todo: Task) => todo.id === selectedTodoId);
+    const selectedTask = todos.find((todo: Todo) => todo.id === selectedTodoId);
 
     const calculateInitialTime = (): number => {
         return calculateInitialTimeLeft({
