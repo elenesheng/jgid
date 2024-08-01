@@ -6,11 +6,7 @@
     "dev": "next dev",
     "build": "next build && next-sitemap",
     "start": "next start",
-    "lint": "next lint",
-    "migrate_deploy": "npx prisma migrate deploy",
-    "db_push": "npx prisma db push",
-    "baseline": "echo 'Manual step: Ensure baseline migration is applied before deployment.'",
-    "postinstall": "npm run build && npm run migrate_deploy && npm run db_push"
+    "lint": "next lint"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
