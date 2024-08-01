@@ -7,10 +7,10 @@
     "build": "next build && next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "npx prisma migrate deploy",
+    "migrate_deploy": "npx prisma migrate deploy",
     "db_push": "npx prisma db push",
-    "baseline": "npx prisma db pull && npx prisma migrate dev --name baseline --create-only",
-    "postinstall": "if [ \"$BASELINE_DONE\" != \"true\" ]; then npm run baseline && npx vercel env add BASELINE_DONE true; fi && npm run build && npm run migrate && npm run db_push"
+    "baseline": "echo 'Manual step: Ensure baseline migration is applied before deployment.'",
+    "postinstall": "npm run build && npm run migrate_deploy && npm run db_push"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
