@@ -4,8 +4,24 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const prismaAdapter = PrismaAdapter(prisma);
+
+// @ts-ignore
+prismaAdapter.createUser = (data: User) => {
+    return prisma.user.create({
+        data: {
+            id: data.id,
+            email: data.email,
+            image: data.image,
+            name: data.name,
+            sessions: data.sessions,
+            todos: data.todos
+        },
+    });
+}
+
 export const authOptions: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma),
+    adapter: prismaAdapter,
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
