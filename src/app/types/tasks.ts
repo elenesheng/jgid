@@ -39,13 +39,9 @@ export interface TaskInputProps {
 }
 
 export interface EditTaskDrawerProps {
+    task: Todo;
     isOpen: boolean;
     onClose: () => void;
-    taskName: string;
-    taskDescription: string;
-    setTaskName: (name: string) => void;
-    setTaskDescription: (description: string) => void;
-    onSubmit: () => void;
 }
 
 export interface TaskItemMenuProps {
