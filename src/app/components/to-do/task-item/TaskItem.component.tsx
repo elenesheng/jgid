@@ -15,23 +15,15 @@ import { secondsToMinutes } from "@/app/lib/utils/timer";
 import { trimText } from "@/app/lib/utils/timer";
 import { MAX_LENGTH_LONG } from "@/app/lib/constants";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
+import MDEditor from '@uiw/react-md-editor';
 
 const TaskItem = (task: Todo) => {
-    const { removeTodo, toggleTodoCompletion, editTodo, setSelectedTodoId } =
-        useContext(TaskContext)!;
+    const { removeTodo, toggleTodoCompletion, setSelectedTodoId } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const { isRunning } = settings;
     const { name, id, completed, description } = task;
-
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [editName, setEditName] = useState(name);
-    const [editDescription, setEditDescription] = useState(description);
+    const { isOpen, onClose, onOpen } = useDisclosure();
     const [showFullDescription, setShowFullDescription] = useState(false);
-
-    const handleEditSubmit = () => {
-        editTodo(id, editName, editDescription);
-        onClose();
-    };
 
     const onComplete = (id: string) => {
         if (!isRunning) {
@@ -88,7 +80,7 @@ const TaskItem = (task: Todo) => {
                         cursor="pointer"
                         maxW="100%"
                     >
-                        {description}
+                        <MDEditor.Markdown source={description} style={{ whiteSpace: 'pre-wrap' }} />
                     </Box>
                 </Flex>
 
@@ -101,15 +93,7 @@ const TaskItem = (task: Todo) => {
                 />
             </Flex>
 
-            <EditTaskDrawer
-                isOpen={isOpen}
-                onClose={onClose}
-                taskName={editName}
-                taskDescription={editDescription}
-                setTaskName={setEditName}
-                setTaskDescription={setEditDescription}
-                onSubmit={handleEditSubmit}
-            />
+            <EditTaskDrawer task={task} isOpen={isOpen} onClose={onClose} />
         </Box>
     );
 };

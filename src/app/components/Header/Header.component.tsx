@@ -20,9 +20,9 @@ const Header = () => {
       <Container maxW="container.xl">
         <Flex justifyContent="space-between" alignItems="center" p={0}>
           <SettingsModalContainer />
-          <Box>
+          {/* <Box>
             <Logo />
-          </Box>
+          </Box> */}
           <Box>
             <Flex>
               <UserProfile />
