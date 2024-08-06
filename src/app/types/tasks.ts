@@ -1,3 +1,5 @@
+import React, { ForwardedRef } from 'react';
+
 export interface Todo {
     id: string;
     name: string;
@@ -42,6 +44,8 @@ export interface EditTaskDrawerProps {
     task: Todo;
     isOpen: boolean;
     onClose: () => void;
+    editorRef: ForwardedRef<any>;
+    [key: string]: any;
 }
 
 export interface TaskItemMenuProps {

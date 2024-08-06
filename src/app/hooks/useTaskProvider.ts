@@ -26,10 +26,9 @@ export function useTaskProvider(): TodoContextType {
         try {
             const fetchedTodos = await api.fetchTodos();
             setTodos(fetchedTodos);
+            setLoading(false);
         } catch (error) {
             console.error('Failed to fetch todos:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
