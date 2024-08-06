@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef } from "react";
 import {
     Text,
     Flex,
@@ -15,25 +15,20 @@ import { secondsToMinutes } from "@/app/lib/utils/timer";
 import { trimText } from "@/app/lib/utils/timer";
 import { MAX_LENGTH_LONG } from "@/app/lib/constants";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
-import MDEditor from '@uiw/react-md-editor';
 
 const TaskItem = (task: Todo) => {
     const { removeTodo, toggleTodoCompletion, setSelectedTodoId } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const { isRunning } = settings;
-    const { name, id, completed, description } = task;
+    const { name, id, completed } = task;
     const { isOpen, onClose, onOpen } = useDisclosure();
-    const [showFullDescription, setShowFullDescription] = useState(false);
+    const editorRef = useRef(null);
 
     const onComplete = (id: string) => {
         if (!isRunning) {
             setSelectedTodoId("");
         }
         toggleTodoCompletion(id);
-    };
-
-    const toggleDescription = () => {
-        setShowFullDescription(!showFullDescription);
     };
 
     const calcWidth = `calc(100% - 126px);`;
@@ -67,21 +62,6 @@ const TaskItem = (task: Todo) => {
                     >
                         {trimText(name, MAX_LENGTH_LONG)}
                     </Text>
-
-                    <Box
-                        ml="2"
-                        mt="2"
-                        fontSize="sm"
-                        color="textSecondary"
-                        height="auto"
-                        overflow="hidden"
-                        onClick={toggleDescription}
-                        noOfLines={showFullDescription ? 0 : 1}
-                        cursor="pointer"
-                        maxW="100%"
-                    >
-                        <MDEditor.Markdown source={description} style={{ whiteSpace: 'pre-wrap' }} />
-                    </Box>
                 </Flex>
 
                 <Spacer />
@@ -93,7 +73,7 @@ const TaskItem = (task: Todo) => {
                 />
             </Flex>
 
-            <EditTaskDrawer task={task} isOpen={isOpen} onClose={onClose} />
+            <EditTaskDrawer task={task} isOpen={isOpen} onClose={onClose} editorRef={editorRef} />
         </Box>
     );
 };

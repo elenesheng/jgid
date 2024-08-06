@@ -39,6 +39,22 @@ const theme = extendTheme({
             body: {
                 bg: "bg",
                 lineHeight: "base",
+                'h1': {
+                    FontWeight: 700,
+                    fontSize: '40px'
+                },
+                'h2': {
+                    FontWeight: 700,
+                    fontSize: '30px'
+                },
+                'h3': {
+                    FontWeight: 700,
+                    fontSize: '25px'
+                },
+                'h4': {
+                    FontWeight: 700,
+                    fontSize: '20px'
+                }
             },
         },
     },
