@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     Menu,
     MenuButton,
@@ -11,8 +11,22 @@ import {
 import { DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import { FaEllipsisV } from 'react-icons/fa';
 import { TaskItemMenuProps } from '@/app/types/tasks';
+import { TaskContext } from '@/app/contexts/TaskContext';
+import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
-const TaskItemMenu = ({ onRemove, onComplete, onEdit, completed }: TaskItemMenuProps) => {
+const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
+    const { removeTodo, toggleTodoCompletion, setSelectedTodoId } = useContext(TaskContext)!;
+    const settings = useContext(SettingsStateContext)!;
+
+
+    const onComplete = (e: React.MouseEvent<HTMLElement>) => {
+        e.stopPropagation();
+        if (!settings.isRunning) {
+            setSelectedTodoId("");
+        }
+        toggleTodoCompletion(id);
+    };
+
     return (
         <Menu>
             <MenuButton
@@ -25,9 +39,10 @@ const TaskItemMenu = ({ onRemove, onComplete, onEdit, completed }: TaskItemMenuP
                 _hover={{
                     backgroundColor: "transparent"
                 }}
+                onClick={(e)=> e.stopPropagation()}
             />
             <MenuList>
-                <MenuItem onClick={onRemove}>
+                <MenuItem onClick={() => removeTodo(id)}>
                     <Flex justifyContent="space-between" align="center">
                         <DeleteIcon color="textPrimary" />
                         <Text ml="2" color="textPrimary">Delete</Text>

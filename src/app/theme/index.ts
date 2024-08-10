@@ -54,6 +54,9 @@ const theme = extendTheme({
                 'h4': {
                     FontWeight: 700,
                     fontSize: '20px'
+                },
+                'ul': {
+                    marginInlineStart: '18px'
                 }
             },
         },

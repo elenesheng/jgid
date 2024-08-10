@@ -17,24 +17,14 @@ import { MAX_LENGTH_LONG } from "@/app/lib/constants";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
 const TaskItem = (task: Todo) => {
-    const { removeTodo, toggleTodoCompletion, setSelectedTodoId } = useContext(TaskContext)!;
-    const settings = useContext(SettingsStateContext)!;
-    const { isRunning } = settings;
     const { name, id, completed } = task;
     const { isOpen, onClose, onOpen } = useDisclosure();
     const editorRef = useRef(null);
 
-    const onComplete = (id: string) => {
-        if (!isRunning) {
-            setSelectedTodoId("");
-        }
-        toggleTodoCompletion(id);
-    };
-
     const calcWidth = `calc(100% - 126px);`;
 
     return (
-        <Box border="none" mb="15px">
+        <Box border="none" mb="15px" onClick={onOpen} style={{cursor: 'pointer'}}>
             <Flex align="center" w="100%" position="relative" alignItems="flex-start">
                 <Flex
                     w="47px"
@@ -66,10 +56,9 @@ const TaskItem = (task: Todo) => {
 
                 <Spacer />
                 <TaskItemMenu
-                    onRemove={() => removeTodo(id)}
-                    onComplete={() => onComplete(id)}
+                    id={id}
+                    completed ={completed}
                     onEdit={onOpen}
-                    completed={completed}
                 />
             </Flex>
 
