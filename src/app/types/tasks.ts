@@ -49,8 +49,7 @@ export interface EditTaskDrawerProps {
 }
 
 export interface TaskItemMenuProps {
-    onRemove: () => void;
-    onComplete: () => void;
     onEdit: () => void;
+    id: string;
     completed: boolean;
 }

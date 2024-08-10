@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import {
     Drawer,
     DrawerOverlay,
     DrawerContent,
-    DrawerHeader,
     DrawerBody,
     DrawerFooter,
     Input,
@@ -20,35 +19,56 @@ import {
     MDXEditor,
     toolbarPlugin,
     UndoRedo, BoldItalicUnderlineToggles, ListsToggle
-} from '@mdxeditor/editor'
+} from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
+import styles from './taskItem.module.scss';
+import { useColorMode } from '@chakra-ui/react';
 
 const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, editorRef, ...props }) => {
     const { editTodo } = useContext(TaskContext)!;
     const { name, id, description } = task;
     const [editName, setEditName] = useState(name);
     const [value, setValue] = useState(description);
+    const { colorMode } = useColorMode();
 
-    const handleSave = () => {
+    const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditName(e.target.value);
+    }, []);
+
+    const handleValueChange = useCallback((newValue: string) => {
+        setValue(newValue);
+    }, []);
+
+    const handleSave = useCallback(() => {
         editTodo(id, editName, value);
         onClose();
-    };
+    }, [id, editName, value, editTodo, onClose]);
+
+    const handleClose = useCallback(() => {
+        handleSave();
+    }, [handleSave]);
 
     return (
-        <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="lg">
+        <Drawer isOpen={isOpen} placement="right" onClose={handleClose} size="lg">
             <DrawerOverlay />
             <DrawerContent>
-                <DrawerHeader>Edit Task</DrawerHeader>
-                <DrawerBody>
+                <DrawerBody color="textPrimary">
                     <Input
                         value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
+                        onChange={handleNameChange}
                         placeholder="Task Name"
                         mb={4}
+                        border="none"
+                        fontSize="25px"
+                        focusBorderColor="transparent"
+                        _focus={{
+                            boxShadow: 'none',
+                        }}
                     />
                     <MDXEditor
+                        className={colorMode === 'dark' ? styles.darkEditor : styles.defaultEditor}
                         markdown={value}
-                        onChange={(val) => setValue(val)}
+                        onChange={handleValueChange}
                         plugins={[
                             headingsPlugin(),
                             listsPlugin(),
@@ -58,7 +78,6 @@ const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, 
                             toolbarPlugin({
                                 toolbarContents: () => (
                                     <>
-                                        {' '}
                                         <UndoRedo />
                                         <BoldItalicUnderlineToggles />
                                         <ListsToggle />
@@ -74,7 +93,7 @@ const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, 
                         Cancel
                     </Button>
                     <Button colorScheme="blue" onClick={handleSave}>
-                        Save
+                        Save & Close
                     </Button>
                 </DrawerFooter>
             </DrawerContent>
