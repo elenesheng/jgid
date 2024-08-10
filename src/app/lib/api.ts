@@ -1,4 +1,3 @@
-``
 export interface Todo {
     id: string;
     name: string;
@@ -28,7 +27,6 @@ export async function createTodo(todo: Omit<Todo, 'id'>): Promise<Todo> {
 }
 
 export async function updateTodo(todo: Todo): Promise<Todo> {
-    console.log(todo);
     const response = await fetch(`/api/todos/${todo.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
 import {
     Drawer,
     DrawerOverlay,
@@ -69,6 +69,7 @@ const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, 
                         className={colorMode === 'dark' ? styles.darkEditor : styles.defaultEditor}
                         markdown={value}
                         onChange={handleValueChange}
+                        autoFocus={{ defaultSelection: "rootEnd" }}
                         plugins={[
                             headingsPlugin(),
                             listsPlugin(),
@@ -85,13 +86,9 @@ const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, 
                                 )
                             })]}
                         {...props}
-                        ref={editorRef}
                     />
                 </DrawerBody>
                 <DrawerFooter>
-                    <Button variant="outline" mr={3} onClick={onClose}>
-                        Cancel
-                    </Button>
                     <Button colorScheme="blue" onClick={handleSave}>
                         Save & Close
                     </Button>
