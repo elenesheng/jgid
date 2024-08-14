@@ -18,8 +18,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     try {
         const updatedTodo = await prisma.todo.update({
             where: { id: todoId, userId },
-            data: { name, description, completed, spentTime, weekdayName },
-            include: { weekday: true }
+            data: { name, description, completed, spentTime, weekday: weekdayName }
         });
 
         return NextResponse.json(updatedTodo);

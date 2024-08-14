@@ -4,22 +4,21 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  todos         Todo[]
+  id       String   @id @default(cuid())
+  name     String?
+  email    String?  @unique
+  image    String?
+  accounts Account[]
+  sessions Session[]
+  todos    Todo[]
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String @id @default(cuid())
   userId            String
   type              String
   provider          String
@@ -31,7 +30,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -45,19 +44,12 @@ model Session {
 }
 
 model Todo {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   description String
-  completed   Boolean  @default(false)
-  spentTime   Int      @default(0)
+  completed   Boolean @default(false)
+  spentTime   Int     @default(0)
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  weekday     Weekday? @relation(fields: [weekdayName], references: [name], onDelete: Cascade)
-  weekdayName String?
-}
-
-model Weekday {
-  id    String @id @default(cuid())
-  name  String @unique
-  todos Todo[]
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekday     String?
 }

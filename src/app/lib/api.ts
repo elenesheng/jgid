@@ -45,14 +45,6 @@ export async function deleteAllTodos(): Promise<void> {
     }
 }
 
-export async function fetchWeekDays(): Promise<WeekDay[]> {
-    const response = await fetch('/api/weekdays');
-    if (!response.ok) {
-        throw new Error('Failed to fetch weekdays');
-    }
-    return response.json();
-}
-
 export async function fetchTodosByWeekday(weekday: string): Promise<Todo[]> {
     const response = await fetch(`/api/todos?weekday=${encodeURIComponent(weekday)}`);
     if (!response.ok) {

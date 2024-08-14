@@ -3,7 +3,6 @@ import { TaskInputProps, WeekDay } from '@/app/types/tasks';
 import React from 'react';
 import { Flex, Input, Button, Select, Box } from '@chakra-ui/react';
 import { TaskContext } from '@/app/contexts/TaskContext';
-import { fetchWeekDays } from '@/app/lib/api';
 import { WEEK_DAYS } from '@/app/lib/constants';
 import { getWeekDayId } from '@/app/lib/utils/helper';
 
@@ -11,7 +10,6 @@ const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
     const { todos, addTodo, clearAllTodos, activeDate } = useContext(TaskContext)!;
 
-    console.log(activeDate);
     const handleAddTask = () => {
         if (taskName.trim()) {
             addTodo(taskName, "", activeDate);

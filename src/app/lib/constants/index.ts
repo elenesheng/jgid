@@ -19,12 +19,11 @@ export const MAX_GOAL_VALUE = 10;
 export const MAX_WORK_VALUE = 60;
 export const MAX_REST_VALUE = 45;
 export const WEEK_DAYS = [
-    { id: 'all', name: "All Todos" },
-    { id: "id_lzsaxmqw_g650mbx20sa", name: "Monday" },
-    { id: "id_lzsaxmqw_levam5fqivo", name: "Tuesday" },
-    { id: "id_lzsaxmqw_lkquojwvjqr", name: "Wednesday" },
-    { id: "id_lzsaxmqw_e4ine77pvck", name: "Thursday" },
-    { id: "id_lzsaxmqw_2oyjpqdu0j2", name: "Friday" },
-    { id: "id_lzsaxmqw_dvk7fud4314", name: "Saturday" },
-    { id: "id_lzsaxmqw_35p3h4c1b4", name: "Sunday" },
+    { name: "Monday" },
+    { name: "Tuesday" },
+    { name: "Wednesday" },
+    {  name: "Thursday" },
+    { name: "Friday" },
+    { name: "Saturday" },
+    {  name: "Sunday" },
 ];
