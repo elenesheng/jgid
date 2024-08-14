@@ -13,8 +13,9 @@ export interface SettingsComponentProps {
     selectedSound: string;
     handleWhiteNoiseToggle: () => void;
     whiteNoiseValue: boolean;
+    weekDaysValue: boolean;
+    handleIsWeekdaysChange: () => void;
 }
-
 export interface SoundProps {
     selectedSound: string;
     setSelectedSound: (soundId: string) => void;
@@ -41,7 +42,8 @@ export interface DurationInputProps {
     max: number;
 }
 
-export interface WhiteNoiseCheckboxProps {
+export interface SettingsCheckboxProps {
+    label: string;
     isChecked: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -59,4 +61,5 @@ export interface SettingsControls {
     setSound: (sound_id: string) => void;
     updateWorkDuration: (minutes: number) => void;
     updateRestDuration: (minutes: number) => void;
+    setIsWeekDays: (isWeekDays: boolean) => void;
 }

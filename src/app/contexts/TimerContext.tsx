@@ -1,4 +1,5 @@
 "use client";
+
 import React, { createContext, ReactNode, useCallback, useMemo, useContext } from 'react';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import { TimerState, TimerSettings, TimerControls } from '@/app/types/timer';
@@ -27,7 +28,9 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     workSessions: 0,
     sound: "",
     goal: 0,
-    isWhiteNoise: false
+    isWhiteNoise: false,
+    isAutoRest: false,
+    isWeekDays: false,
   }, true);
 
   // Timer control callbacks
@@ -64,6 +67,14 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   // Settings callbacks
   const setSound = useCallback((sound_id: string) => {
     setSettings(prev => ({ ...prev, sound: sound_id }));
+  }, [setSettings]);
+
+  const setAutoRest = useCallback(() => {
+    setSettings(prev => ({ ...prev, isAutoRest: !prev.isAutoRest }));
+  }, [setSettings]);
+
+  const setIsWeekDays = useCallback((isWeekDays: boolean) => {
+    setSettings(prev => ({ ...prev, isWeekDays }));
   }, [setSettings]);
 
   const setGoal = useCallback((goals: number) => {
@@ -106,8 +117,10 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     updateRestBreak,
     updateWorkSessions,
     updateWorkDuration,
-    updateRestDuration
-  }), [setSound, setGoal, setWhiteNoise, updateWorkSessions, updateRestBreak, updateWorkDuration, updateRestDuration]);
+    updateRestDuration,
+    setAutoRest,
+    setIsWeekDays
+  }), [setSound, setGoal, setWhiteNoise, updateWorkSessions, updateRestBreak, updateWorkDuration, updateRestDuration, setAutoRest, setIsWeekDays]);
 
   return (
     <TimerStateContext.Provider value={timer}>

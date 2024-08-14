@@ -1,15 +1,15 @@
 import React from "react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
-import { WhiteNoiseCheckboxProps } from "@/app/types/settings";
+import { SettingsCheckboxProps } from "@/app/types/settings";
 
-const WhiteNoiseCheckbox = ({ isChecked, onChange }: WhiteNoiseCheckboxProps) => {
+const SettingsCheckbox = ({ isChecked, onChange, label }: SettingsCheckboxProps) => {
     return (
         <CheckboxGroup >
             <Checkbox mb="md" isChecked={isChecked} onChange={onChange}>
-                Work with white noise
+                {label}
             </Checkbox>
         </CheckboxGroup>
     );
 };
 
-export default WhiteNoiseCheckbox;
+export default SettingsCheckbox;

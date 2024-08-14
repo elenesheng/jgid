@@ -6,11 +6,22 @@ export interface Todo {
     description: string;
     completed: boolean;
     spentTime: number;
+    weekdayId?: string;
+}
+
+export interface WeekDay {
+    id: string;
+    name: string;
+}
+
+export interface WeekDay {
+    id: string;
+    name: string
 }
 export interface TodoContextType {
     todos: Todo[];
     loading: boolean;
-    addTodo: (name: string, description: string) => void;
+    addTodo: (name: string, description: string, weekDayId: string) => void;
     removeTodo: (todoId: string) => void;
     toggleTodoCompletion: (todoId: string) => void;
     setSpentTime: (todoId: string, timeSpent: number) => void;
@@ -19,6 +30,9 @@ export interface TodoContextType {
     selectedTodoId: string;
     setSelectedTodoId: (todoId: string) => void;
     editTodo: (todoId: string, name: string, description: string) => void;
+    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+    activeDate: string;
+    setActiveDate: (date: string) => void;
 }
 
 export type QueuedOperation = {

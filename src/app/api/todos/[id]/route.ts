@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { PrismaClient } from "@prisma/client";
 import { authOptions } from '@/app/lib/utils/authOptions';
+
 const prisma = new PrismaClient();
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -12,13 +13,15 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const userId = session.user.id;
     const todoId = params.id;
-    const { name, description, completed, spentTime } = await request.json();
+    const { name, description, completed, spentTime, weekdayId } = await request.json();
 
     try {
         const updatedTodo = await prisma.todo.update({
             where: { id: todoId, userId },
-            data: { name, description, completed, spentTime },
+            data: { name, description, completed, spentTime, weekdayId },
+            include: { weekday: true }
         });
+
         return NextResponse.json(updatedTodo);
     } catch (error) {
         console.log(error);
