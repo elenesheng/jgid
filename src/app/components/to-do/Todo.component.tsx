@@ -6,30 +6,19 @@ import { TaskContext } from '@/app/contexts/TaskContext';
 import TaskInput from './task-input/TaskInput.component';
 import TaskItem from './task-item/TaskItem.component';
 import { Todo, WeekDay } from '@/app/types/tasks';
-import { fetchTodosByWeekday, fetchWeekDays } from '@/app/lib/api';
+import { fetchTodosByWeekday } from '@/app/lib/api';
 import { useSession } from "next-auth/react";
 import {
     SettingsStateContext,
 } from "@/app/contexts/TimerContext";
+import { WEEK_DAYS } from '@/app/lib/constants';
 
 const TodoComponent = () => {
     const { todos, setTodos, activeDate, setActiveDate } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
-    const [weekdays, setWeekdays] = useState<WeekDay[]>([]);
     const maxTasks = 7;
     const { data: session, status } = useSession();
 
-    useEffect(() => {
-        const loadWeekdays = async () => {
-            try {
-                const fetchedWeekdays = await fetchWeekDays();
-                setWeekdays(fetchedWeekdays);
-            } catch (error) {
-                console.error('Error fetching weekdays:', error);
-            }
-        };
-        loadWeekdays();
-    }, []);
 
     const handleWeekdayClick = async (weekday: string) => {
         setActiveDate(weekday);
@@ -51,9 +40,9 @@ const TodoComponent = () => {
             )}
             {status === "authenticated" && settings.isWeekDays?
                 <Flex mb={4}>
-                    {weekdays.map((weekday) => (
+                    {WEEK_DAYS.map((weekday) => (
                         <Button
-                            key={weekday.id}
+                            key={weekday.name}
                             onClick={() => handleWeekdayClick(weekday.name)}
                             variant={weekday.name === activeDate ? "primary" : "ghost"}
                             margin={0}

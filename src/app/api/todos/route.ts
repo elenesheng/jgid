@@ -1,4 +1,3 @@
-import { WeekDay } from './../../types/tasks';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { PrismaClient } from "@prisma/client";
@@ -9,16 +8,14 @@ const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const weekday = searchParams.get('weekday');
+    const session = await getServerSession(authOptions);
+    const userId = session?.user.id;
 
     try {
         const todos = await prisma.todo.findMany({
             where: {
-                weekday: {
-                    name: weekday || undefined,
-                },
-            },
-            include: {
-                weekday: true,
+                userId: userId,
+                ...(weekday ? { weekday } : {}),
             },
         });
 
@@ -39,7 +36,6 @@ export async function POST(request: NextRequest) {
     const userId = session.user.id;
     const { id, name, description, completed, spentTime, weekdayName } = await request.json();
 
-    console.log(weekdayName)
     try {
         const newTodo = await prisma.todo.create({
             data: {
@@ -48,7 +44,7 @@ export async function POST(request: NextRequest) {
                 completed,
                 spentTime,
                 userId,
-                weekdayName
+                weekday: weekdayName,
             },
         });
         return NextResponse.json(newTodo, { status: 201 });
