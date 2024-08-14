@@ -6,7 +6,7 @@ import { TaskContext } from '@/app/contexts/TaskContext';
 import TaskInput from './task-input/TaskInput.component';
 import TaskItem from './task-item/TaskItem.component';
 import { Todo, WeekDay } from '@/app/types/tasks';
-import { fetchTodosByWeekday, fetchTodos, fetchWeekDays } from '@/app/lib/api';
+import { fetchTodosByWeekday, fetchWeekDays } from '@/app/lib/api';
 import { useSession } from "next-auth/react";
 import {
     SettingsStateContext,

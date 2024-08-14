@@ -6,7 +6,7 @@ export interface Todo {
     description: string;
     completed: boolean;
     spentTime: number;
-    weekdayId?: string;
+    weekdayName?: string;
 }
 
 export interface WeekDay {

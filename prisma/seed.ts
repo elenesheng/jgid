@@ -2,28 +2,43 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const weekDays = [
-    { id: "id_lzsaxmqw_g650mbx20sa", name: "Monday" },
-    { id: "id_lzsaxmqw_levam5fqivo", name: "Tuesday" },
-    { id: "id_lzsaxmqw_lkquojwvjqr", name: "Wednesday" },
-    { id: "id_lzsaxmqw_e4ine77pvck", name: "Thursday" },
-    { id: "id_lzsaxmqw_2oyjpqdu0j2", name: "Friday" },
-    { id: "id_lzsaxmqw_dvk7fud4314", name: "Saturday" },
-    { id: "id_lzsaxmqw_35p3h4c1b4", name: "Sunday" },
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
 ];
 
 async function main() {
-    for (const day of weekDays) {
+    for (const dayName of weekDays) {
         const weekday = await prisma.weekday.upsert({
-            where: { id: day.id },
+            where: { name: dayName },
             update: {},
             create: {
-                id: day.id,
-                name: day.name,
+                name: dayName,
             },
         });
-        console.log(`Created weekday with id: ${weekday.id}`);
+        console.log(`Upserted weekday: ${weekday.name} with id: ${weekday.id}`);
     }
-    console.log('Seeding finished.');
+
+    const monday = await prisma.weekday.upsert({
+        where: { name: 'Monday' },
+        update: {},
+        create: {
+            name: 'Monday',
+        },
+    });
+
+    await prisma.todo.updateMany({
+        where: { weekdayName: null },
+        data: {
+            weekdayName: monday.name,
+        },
+    });
+
+    console.log("Updated todos with null weekdays to Monday");
 }
 
 main()

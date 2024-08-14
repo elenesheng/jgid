@@ -11,10 +11,10 @@ const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
     const { todos, addTodo, clearAllTodos, activeDate } = useContext(TaskContext)!;
 
+    console.log(activeDate);
     const handleAddTask = () => {
         if (taskName.trim()) {
-            const id = getWeekDayId(activeDate);
-            addTodo(taskName, "", id);
+            addTodo(taskName, "", activeDate);
             setTaskName('');
         }
     };

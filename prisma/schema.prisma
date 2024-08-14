@@ -52,12 +52,12 @@ model Todo {
   spentTime   Int      @default(0)
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  weekday     Weekday? @relation(fields: [weekdayId], references: [id], onDelete: Cascade)
-  weekdayId   String?
+  weekday     Weekday? @relation(fields: [weekdayName], references: [name], onDelete: Cascade)
+  weekdayName String?
 }
 
 model Weekday {
-  id       String   @id @default(cuid())
-  name     String @unique
-  todos     Todo[]
+  id    String @id @default(cuid())
+  name  String @unique
+  todos Todo[]
 }
