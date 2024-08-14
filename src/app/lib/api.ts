@@ -1,11 +1,4 @@
-export interface Todo {
-    id: string;
-    name: string;
-    description: string;
-    completed: boolean;
-    spentTime: number;
-}
-
+import { Todo, WeekDay } from "../types/tasks";
 export async function fetchTodos(): Promise<Todo[]> {
     const response = await fetch('/api/todos');
     if (!response.ok) {
@@ -50,4 +43,20 @@ export async function deleteAllTodos(): Promise<void> {
     if (!response.ok) {
         throw new Error('Failed to delete all todos');
     }
+}
+
+export async function fetchWeekDays(): Promise<WeekDay[]> {
+    const response = await fetch('/api/weekdays');
+    if (!response.ok) {
+        throw new Error('Failed to fetch weekdays');
+    }
+    return response.json();
+}
+
+export async function fetchTodosByWeekday(weekday: string): Promise<Todo[]> {
+    const response = await fetch(`/api/todos?weekday=${encodeURIComponent(weekday)}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch todos');
+    }
+    return response.json();
 }

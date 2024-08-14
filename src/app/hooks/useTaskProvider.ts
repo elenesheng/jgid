@@ -1,31 +1,48 @@
-import { useState, useCallback, useEffect } from 'react';
+"use client";
+
+import { useState, useCallback, useEffect, useContext } from 'react';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import { v4 as uuidv4 } from 'uuid';
 import { useSession } from 'next-auth/react';
 import * as api from '@/app/lib/api';
 import { useOperationQueue } from './useOperationQueue';
 import { debounce } from '@/app/lib/utils/debounce';
-import { TodoContextType, Todo } from '@/app/types/tasks';
+import { TodoContextType, Todo, WeekDay } from '@/app/types/tasks';
+import { getCurrentWeekday, getWeekDayId } from '../lib/utils/helper';
+import {
+    SettingsStateContext,
+} from "@/app/contexts/TimerContext";
 
 export function useTaskProvider(): TodoContextType {
     const [todos, setTodos] = useLocalStorage<Todo[]>('todos', []);
     const [selectedTodoId, setSelectedTodoId] = useLocalStorage<string>('selectedTodoId', '');
+    const [activeDate, setActiveDate] = useLocalStorage<string>('activeDate', "");
     const [loading, setLoading] = useState(true);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const { addOperation, processQueue } = useOperationQueue(session);
+    const settings = useContext(SettingsStateContext)!;
 
     useEffect(() => {
+        if (activeDate !== "") {
+            setActiveDate(getCurrentWeekday());
+        }
+
         if (session) {
             fetchTodos();
         } else {
             setLoading(false);
         }
-    }, [session]);
+    }, [session, settings.isWeekDays]);
 
     const fetchTodos = async () => {
         try {
-            const fetchedTodos = await api.fetchTodos();
-            setTodos(fetchedTodos);
+            if (status === "authenticated" && settings.isWeekDays) {
+                const fetchedTodos = await api.fetchTodosByWeekday(getCurrentWeekday())
+                setTodos(fetchedTodos);
+            } else {
+                const fetchedTodos = await api.fetchTodos();
+                setTodos(fetchedTodos);
+            }
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch todos:', error);
@@ -44,8 +61,8 @@ export function useTaskProvider(): TodoContextType {
         }
     }, 300);
 
-    const addTodo = useCallback((name: string, description: string) => {
-        const newTodo: Todo = { id: uuidv4(), name, description, completed: false, spentTime: 0 };
+    const addTodo = useCallback((name: string, description: string, weekday: string) => {
+        const newTodo: Todo = { id: uuidv4(), name, description, completed: false, spentTime: 0, weekdayId: weekday };
         setTodos(prevTodos => [...prevTodos, newTodo]);
         debouncedAddTodo(newTodo);
     }, [setTodos, session]);
@@ -106,9 +123,12 @@ export function useTaskProvider(): TodoContextType {
     }, [setSelectedTodoId]);
 
     return {
+        activeDate,
+        setActiveDate,
         todos,
         loading,
         addTodo,
+        setTodos,
         removeTodo,
         toggleTodoCompletion,
         setSpentTime,

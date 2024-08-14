@@ -14,6 +14,8 @@ export interface TimerSettings {
     sound: string;
     goal: number;
     isWhiteNoise: boolean;
+    isAutoRest: boolean;
+    isWeekDays: boolean;
 }
 export interface TimerContextType {
     timer: TimerState;

@@ -19,7 +19,7 @@ import {
 import { FaCog } from "react-icons/fa";
 import { SettingsComponentProps } from "@/app/types/settings";
 import DurationInput from "./duration-input/DurationInput";
-import WhiteNoiseCheckbox from "./white-noise/WhiteNoiseCheckbox";
+import SettingsCheckbox from "./settings-checkbox/SettingsCheckbox";
 import Goals from "./goals/Goals.component";
 import SoundList from "./sound-list/SoundList.component";
 import SettingsFooter from "./footer/SettingsFooter";
@@ -31,6 +31,7 @@ import {
     MAX_WORK_VALUE,
     SECONDS_IN_A_MINUTE,
 } from "@/app/lib/constants";
+import { useSession } from "next-auth/react";
 
 const SettingsModal = ({
     handleOpen,
@@ -47,11 +48,14 @@ const SettingsModal = ({
     selectedSound,
     handleWhiteNoiseToggle,
     whiteNoiseValue,
+    handleIsWeekdaysChange,
+    weekDaysValue
 }: SettingsComponentProps) => {
     const timer = useContext(TimerStateContext)!;
     const settings = useContext(SettingsStateContext)!;
     const { isRunning, workDuration, restDuration } = settings;
     const { restTime, workTime } = timer;
+    const { data: session, status } = useSession();
 
     return (
         <Box textAlign="right">
@@ -94,15 +98,23 @@ const SettingsModal = ({
                         />
                         <Goals goal={goalValue} onGoalChange={handleGoalChange} />
                         <Box>
-                            <WhiteNoiseCheckbox
+                            <SettingsCheckbox
                                 isChecked={whiteNoiseValue}
                                 onChange={handleWhiteNoiseToggle}
+                                label="Work with white noise"
                             />
                             <SoundList
                                 selectedSound={selectedSound}
                                 setSelectedSound={setSelectedSound}
                             />
                         </Box>
+                        {status === "authenticated"?
+                            <SettingsCheckbox
+                                isChecked={weekDaysValue}
+                                onChange={handleIsWeekdaysChange}
+                                label="Manage tasks by week days"
+                            />: 
+                        ""}
                     </ModalBody>
                     <SettingsFooter onSave={handleSave} onClose={onClose} />
                 </ModalContent>
