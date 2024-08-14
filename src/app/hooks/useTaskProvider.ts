@@ -62,7 +62,7 @@ export function useTaskProvider(): TodoContextType {
     }, 300);
 
     const addTodo = useCallback((name: string, description: string, weekday: string) => {
-        const newTodo: Todo = { id: uuidv4(), name, description, completed: false, spentTime: 0, weekdayId: weekday };
+        const newTodo: Todo = { id: uuidv4(), name, description, completed: false, spentTime: 0, weekdayName: weekday };
         setTodos(prevTodos => [...prevTodos, newTodo]);
         debouncedAddTodo(newTodo);
     }, [setTodos, session]);

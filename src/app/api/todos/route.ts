@@ -37,8 +37,9 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const { id, name, description, completed, spentTime, weekdayId } = await request.json();
+    const { id, name, description, completed, spentTime, weekdayName } = await request.json();
 
+    console.log(weekdayName)
     try {
         const newTodo = await prisma.todo.create({
             data: {
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
                 completed,
                 spentTime,
                 userId,
-                weekdayId
+                weekdayName
             },
         });
         return NextResponse.json(newTodo, { status: 201 });
