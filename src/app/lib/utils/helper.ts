@@ -14,9 +14,3 @@ export function getCurrentWeekday() {
 
     return daysOfWeek[dayIndex];
 }
-
-export function getWeekDayId(dayName: string): string {
-    const day = WEEK_DAYS.find(day => day.name.toLowerCase() === dayName.toLowerCase());
-
-    return day ? day.id : '';
-}

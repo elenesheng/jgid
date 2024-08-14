@@ -8,7 +8,7 @@ import * as api from '@/app/lib/api';
 import { useOperationQueue } from './useOperationQueue';
 import { debounce } from '@/app/lib/utils/debounce';
 import { TodoContextType, Todo, WeekDay } from '@/app/types/tasks';
-import { getCurrentWeekday, getWeekDayId } from '../lib/utils/helper';
+import { getCurrentWeekday } from '../lib/utils/helper';
 import {
     SettingsStateContext,
 } from "@/app/contexts/TimerContext";
