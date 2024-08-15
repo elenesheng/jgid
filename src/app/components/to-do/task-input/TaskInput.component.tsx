@@ -10,7 +10,7 @@ const TaskInput = () => {
     const { todos, addTodo, clearAllTodos, activeDate } = useContext(TaskContext)!;
 
     const handleAddTask = () => {
-        if (taskName.trim()) {
+        if (taskName) {
             addTodo(taskName, "", activeDate);
             setTaskName('');
         }

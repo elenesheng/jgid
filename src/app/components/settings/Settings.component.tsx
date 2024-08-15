@@ -108,13 +108,15 @@ const SettingsModal = ({
                                 setSelectedSound={setSelectedSound}
                             />
                         </Box>
-                        {status === "authenticated"?
-                            <SettingsCheckbox
-                                isChecked={weekDaysValue}
-                                onChange={handleIsWeekdaysChange}
-                                label="Manage tasks by week days"
-                            />: 
-                        ""}
+                        <Box>
+                            {status === "authenticated" ?
+                                <SettingsCheckbox
+                                    isChecked={weekDaysValue}
+                                    onChange={handleIsWeekdaysChange}
+                                    label="Manage tasks by week days"
+                                /> :
+                                ""}
+                        </Box>
                     </ModalBody>
                     <SettingsFooter onSave={handleSave} onClose={onClose} />
                 </ModalContent>

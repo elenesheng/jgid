@@ -6,7 +6,7 @@ export interface Todo {
     description: string;
     completed: boolean;
     spentTime: number;
-    weekdayName?: string;
+    weekday: string;
 }
 
 export interface WeekDay {
@@ -21,7 +21,7 @@ export interface WeekDay {
 export interface TodoContextType {
     todos: Todo[];
     loading: boolean;
-    addTodo: (name: string, description: string, weekDayId: string) => void;
+    addTodo: (name: string, description: string, weekday: string) => void;
     removeTodo: (todoId: string) => void;
     toggleTodoCompletion: (todoId: string) => void;
     setSpentTime: (todoId: string, timeSpent: number) => void;
