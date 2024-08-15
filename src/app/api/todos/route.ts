@@ -17,6 +17,14 @@ export async function GET(request: NextRequest) {
                 userId: userId,
                 ...(weekday ? { weekday } : {}),
             },
+            select: {
+                id: true,
+                name: true,
+                completed: true,
+                spentTime: true,
+                weekday: true,
+                description: true
+            },
         });
 
         return NextResponse.json(todos);
@@ -34,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const { id, name, description, completed, spentTime, weekdayName } = await request.json();
+    const { id, name, description, completed, spentTime, weekday } = await request.json();
 
     try {
         const newTodo = await prisma.todo.create({
@@ -44,7 +52,7 @@ export async function POST(request: NextRequest) {
                 completed,
                 spentTime,
                 userId,
-                weekday: weekdayName,
+                weekday: weekday,
             },
         });
         return NextResponse.json(newTodo, { status: 201 });

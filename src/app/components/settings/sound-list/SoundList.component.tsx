@@ -9,7 +9,7 @@ const SoundList = ({ selectedSound, setSelectedSound }: SoundProps) => {
     };
 
     return (
-        <Box>
+        <Box mb="md">
             <Text fontSize="md" mb="xs" fontWeight="500">Choose notification sound</Text>
             <Select value={selectedSound} onChange={handleSelect}>
                 <option value="">No Sound</option>
