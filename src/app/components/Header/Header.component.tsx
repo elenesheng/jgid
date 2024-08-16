@@ -19,14 +19,16 @@ const Header = () => {
     >
       <Container maxW="container.xl">
         <Flex justifyContent="space-between" alignItems="center" p={0}>
-          <SettingsModalContainer />
-          {/* <Box>
+          <Flex alignItems="center">
+            <SettingsModalContainer />
+            <ThemeSwitcher />          </Flex>
+
+          <Box>
             <Logo />
-          </Box> */}
+          </Box>
           <Box>
             <Flex>
               <UserProfile />
-              <ThemeSwitcher />
             </Flex>
           </Box>
         </Flex>

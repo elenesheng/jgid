@@ -1,4 +1,4 @@
-import { Button, HStack, IconButton, Text, Avatar } from '@chakra-ui/react';
+import { Button, HStack, IconButton, Text, Avatar, Flex } from '@chakra-ui/react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 
@@ -9,10 +9,12 @@ const UserProfile = () => {
         <HStack spacing={4} align="center">
             {session ? (
                 <>
+                    <Flex flexDirection='column' alignItems='center'>
                     <Avatar name={session.user?.name || 'User'} src={session.user?.image || ''} />
                     <Text fontWeight="bold">{session.user?.name}</Text>
+                    </Flex>
                     <Button
-                        colorScheme="red"
+                        size="sm"
                         leftIcon={<FiLogOut />}
                         onClick={() => signOut()}
                     >
@@ -21,7 +23,7 @@ const UserProfile = () => {
                 </>
             ) : (
                 <Button
-                    colorScheme="blue"
+                    size="sm"
                     leftIcon={<FiLogIn />}
                     onClick={() => signIn()}
                 >

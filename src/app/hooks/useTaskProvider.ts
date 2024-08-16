@@ -59,6 +59,11 @@ export function useTaskProvider(): TodoContextType {
         return todos;
     }, [todos, settings.isWeekDays, activeDate]);
 
+    
+    const getCount = (weekday: string) => {
+        return todos.filter((todo) => todo.weekday === weekday).length;
+    }
+
     const addTodo = useCallback((name: string, description: string) => {
         const newTodo: Todo = { 
             id: uuidv4(), 
@@ -162,6 +167,7 @@ export function useTaskProvider(): TodoContextType {
         chooseTodo,
         selectedTodoId,
         editTodo,
-        setSelectedTodoId
+        setSelectedTodoId,
+        getCount
     };
 }

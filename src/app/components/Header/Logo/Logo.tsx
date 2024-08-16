@@ -3,7 +3,7 @@ import { Heading } from "@chakra-ui/react";
 
 const Logo = () => {
     return (
-        <Heading fontStyle="italic" color="accent">Daily Tasks</Heading>
+        <p className="logo">Ticki</p>
     );
 };
 
