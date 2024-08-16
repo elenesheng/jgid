@@ -11,7 +11,7 @@ import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { useSession } from 'next-auth/react';
 
 const TodoComponent = () => {
-    const { todos, activeDate, setActiveDate, addTodo } = useContext(TaskContext)!;
+    const { todos, activeDate, setActiveDate, addTodo, getCount } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const maxTasks = 7;
     const { status } = useSession();
@@ -29,16 +29,19 @@ const TodoComponent = () => {
                 </Alert>
             )}
             {status === "authenticated" && settings.isWeekDays && (
-                <Flex mb={4}>
+                <Flex mb={4} alignItems="center" justifyContent="center">
                     {WEEK_DAYS.map((weekday) => (
+                        <>
                         <Button
                             key={weekday.name}
                             onClick={() => handleWeekdayClick(weekday.name)}
                             variant={weekday.name === activeDate ? "primary" : "ghost"}
                             margin={0}
                         >
-                            {weekday.name}
+                            {weekday.name.slice(0, 3)}
+                            <span style={{ marginLeft: '5px' }}>{` (${getCount(weekday.name)})`}</span>
                         </Button>
+                        </>
                     ))}
                 </Flex>
             )}

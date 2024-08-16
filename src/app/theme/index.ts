@@ -11,6 +11,7 @@ import "@fontsource/playfair-display";
 import "@fontsource/lato";
 import "typeface-crimson-text";
 import "@fontsource/noto-sans/400.css";
+import 'typeface-pacifico';
 
 const config: ThemeConfig = {
     initialColorMode: "light",
@@ -57,6 +58,12 @@ const theme = extendTheme({
                 },
                 'ul': {
                     marginInlineStart: '18px'
+                },
+                '.logo': {
+                    fontFamily: 'Pacifico',
+                    fontSize: '45px',
+                    marginBottom: '20px',
+                    color: 'accent'
                 }
             },
         },

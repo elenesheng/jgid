@@ -33,6 +33,7 @@ export interface TodoContextType {
     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
     activeDate: string;
     setActiveDate: (date: string) => void;
+    getCount: (weekday: string) => number;
 }
 
 export type QueuedOperation = {
