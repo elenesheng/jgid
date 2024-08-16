@@ -5,20 +5,20 @@ import type { Metadata } from 'next';
 import GoalProgress from "./components/progress/GoalProgress.component";
 
 export const metadata: Metadata = {
-  title: 'Daily TODO with Pomodoro Timer - Boost Your Productivity',
-  description: 'Organize your daily tasks efficiently with our integrated Pomodoro Timer. Stay focused and get more done.',
+  title: 'Ticky - Simple & Effective Task Management',
+  description: 'Ticky offers a straightforward, easy-to-use task management solution designed to enhance productivity without the complexity of other apps.',
 
   openGraph: {
-    title: 'Daily TODO with Pomodoro Timer - Boost Your Productivity',
-    description: 'Organize your daily tasks efficiently with our integrated Pomodoro Timer. Stay focused and get more done.',
-    url: 'https://www.dailypom.app/',
-    siteName: 'Daily Pom',
+    title: 'Ticky - Simple & Effective Task Management',
+    description: 'Ticky offers a straightforward, easy-to-use task management solution designed to enhance productivity without the complexity of other apps.',
+    url: 'https://www.ticky.app/',
+    siteName: 'Ticky',
     images: [
       {
         url: '/images/logo.png',
         width: 800,
         height: 600,
-        alt: 'Daily Pom Logo'
+        alt: 'Ticky Logo'
       }
     ],
     locale: 'en_US',
@@ -27,15 +27,15 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    site: '@DailyPomApp',
-    title: 'Daily TODO with Pomodoro Timer - Boost Your Productivity',
-    description: 'Organize your daily tasks efficiently with our integrated Pomodoro Timer. Stay focused and get more done.',
+    site: '@TickyApp',
+    title: 'Ticky - Simple & Effective Task Management',
+    description: 'Ticky offers a straightforward, easy-to-use task management solution designed to enhance productivity without the complexity of other apps.',
     images: [
       {
         url: '/images/logo.png',
         width: 800,
         height: 600,
-        alt: 'Daily Pom Logo'
+        alt: 'Ticky Logo'
       }
     ]
   }
