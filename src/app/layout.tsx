@@ -1,6 +1,5 @@
 import { ChakraUiProvider } from './chakraProvider'
 import { Suspense } from 'react';
-import { TaskProvider } from "@/app/contexts/TaskProvider";
 import { TimerProvider } from "@/app/contexts/TimerContext";
 import Header from './components/Header/Header.component';
 import { ColorModeScript } from '@chakra-ui/react'
