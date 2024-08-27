@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
     try {
         const newTodo = await prisma.todo.create({
             data: {
+                id,
                 name,
                 description,
                 completed,
@@ -61,18 +62,30 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const userId = session.user.id;
+    const weekday = req.nextUrl.searchParams.get('weekday');
 
     try {
-        await prisma.todo.deleteMany({ where: { userId } });
-        return NextResponse.json({ message: 'All todos deleted' });
+        if (weekday) {
+            await prisma.todo.deleteMany({
+                where: {
+                    userId,
+                    weekday: weekday
+                }
+            });
+            return NextResponse.json({ message: `Todos for ${weekday} deleted` });
+        } else {
+            await prisma.todo.deleteMany({ where: { userId } });
+            return NextResponse.json({ message: 'All todos deleted' });
+        }
     } catch (error) {
+        console.error('Error deleting todos:', error);
         return NextResponse.json({ error: 'Failed to delete todos' }, { status: 500 });
     }
 }

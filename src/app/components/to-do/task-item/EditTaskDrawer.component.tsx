@@ -23,9 +23,10 @@ import {
 import '@mdxeditor/editor/style.css';
 import styles from './taskItem.module.scss';
 import { useColorMode } from '@chakra-ui/react';
+import { useTodos } from '@/app/hooks/useTaskProvider';
 
 const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, editorRef, ...props }) => {
-    const { editTodo } = useContext(TaskContext)!;
+    const { editTodo } = useTodos();
     const { name, id, description } = task;
     const [editName, setEditName] = useState(name);
     const [value, setValue] = useState(description);

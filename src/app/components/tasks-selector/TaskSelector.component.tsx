@@ -4,14 +4,15 @@ import React, { useContext } from "react";
 import { TaskContext } from '@/app/contexts/TaskContext';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { Flex, Select } from "@chakra-ui/react";
+import { useTodos } from "@/app/hooks/useTaskProvider";
 
 const TaskSelector = () => {
-    const { chooseTodo, selectedTodoId, todos } = useContext(TaskContext)!;
+    const { setSelectedTodoId, selectedTodoId, todos } = useTodos();
     const settings = useContext(SettingsStateContext)!;
     const { isRunning } = settings;
 
     const handleSelectTask = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        chooseTodo(event.target.value);
+        setSelectedTodoId(event.target.value);
     };
 
     return (

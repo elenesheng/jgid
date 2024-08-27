@@ -13,9 +13,10 @@ import { FaEllipsisV } from 'react-icons/fa';
 import { TaskItemMenuProps } from '@/app/types/tasks';
 import { TaskContext } from '@/app/contexts/TaskContext';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
+import { useTodos } from '@/app/hooks/useTaskProvider';
 
 const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
-    const { removeTodo, toggleTodoCompletion, setSelectedTodoId } = useContext(TaskContext)!;
+    const { removeTodo, toggleTodoComplete, setSelectedTodoId } = useTodos();
     const settings = useContext(SettingsStateContext)!;
 
 
@@ -24,7 +25,7 @@ const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
         if (!settings.isRunning) {
             setSelectedTodoId("");
         }
-        toggleTodoCompletion(id);
+        toggleTodoComplete(id);
     };
 
     return (

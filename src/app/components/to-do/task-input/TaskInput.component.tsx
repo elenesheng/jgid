@@ -4,14 +4,15 @@ import React from 'react';
 import { Flex, Input, Button, Select, Box } from '@chakra-ui/react';
 import { TaskContext } from '@/app/contexts/TaskContext';
 import { WEEK_DAYS } from '@/app/lib/constants';
+import { useTodos } from '@/app/hooks/useTaskProvider';
 
 const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
-    const { todos, addTodo, clearAllTodos, activeDate } = useContext(TaskContext)!;
+    const { todos, addTodo, clearAllTodos } = useTodos();
 
     const handleAddTask = () => {
         if (taskName) {
-            addTodo(taskName, "", activeDate);
+            addTodo(taskName, "");
             setTaskName('');
         }
     };

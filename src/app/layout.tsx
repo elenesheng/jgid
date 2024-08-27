@@ -8,6 +8,7 @@ import theme from './theme';
 import SessionProvider from "./SessionProvider";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from './lib/utils/authOptions';
+import { StoreProvider } from './storeProvider';
 
 export default async function RootLayout({
   children,
@@ -23,10 +24,10 @@ export default async function RootLayout({
           <ChakraUiProvider>
             <ColorModeScript initialColorMode={theme.config.initialColorMode} />
             <TimerProvider>
-              <TaskProvider>
-                <Header />
-                {children}
-              </TaskProvider>
+              <StoreProvider>
+              <Header />
+                  {children}
+                  </StoreProvider>
             </TimerProvider>
           </ChakraUiProvider>
         </SessionProvider>

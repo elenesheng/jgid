@@ -25,6 +25,7 @@ export async function updateTodo(todo: Todo): Promise<Todo> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(todo),
     });
+
     if (!response.ok) {
         throw new Error('Failed to update todo');
     }
@@ -51,4 +52,11 @@ export async function fetchTodosByWeekday(weekday: string): Promise<Todo[]> {
         throw new Error('Failed to fetch todos');
     }
     return response.json();
+}
+
+export async function deleteTodosByWeekDays(weekDay: string): Promise<void> { 
+    const response = await fetch(`/api/todos?weekday=${encodeURIComponent(weekDay)}`, { method: 'DELETE' });
+    if (!response.ok) {
+        throw new Error('Failed to delete todos');
+    }
 }

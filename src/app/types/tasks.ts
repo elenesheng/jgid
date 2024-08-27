@@ -68,3 +68,5 @@ export interface TaskItemMenuProps {
     id: string;
     completed: boolean;
 }
+
+export type TodoOperation = 'ADD_TODO' | 'UPDATE_TODO' | 'REMOVE_TODO' | 'CLEAR_ALL_TODOS';
