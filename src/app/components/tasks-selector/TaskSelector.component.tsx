@@ -4,14 +4,16 @@ import React, { useContext } from "react";
 import { TaskContext } from '@/app/contexts/TaskContext';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { Flex, Select } from "@chakra-ui/react";
+import { useTodos } from "@/app/hooks/useTaskProvider";
+import { Todo } from "@/app/types/tasks";
 
 const TaskSelector = () => {
-    const { chooseTodo, selectedTodoId, todos } = useContext(TaskContext)!;
+    const { setSelectedTodoId, selectedTodoId, todos } = useTodos();
     const settings = useContext(SettingsStateContext)!;
     const { isRunning } = settings;
 
     const handleSelectTask = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        chooseTodo(event.target.value);
+        setSelectedTodoId(event.target.value);
     };
 
     return (
@@ -23,7 +25,7 @@ const TaskSelector = () => {
                 isDisabled={isRunning}
                 size="md"
             >
-                {todos.filter(task => !task.completed).map(task => (
+                {todos.filter((task: Todo)=> !task.completed).map((task: Todo) => (
                     <option key={task.id} value={task.id}>
                         {task.name.length > 10 ? `${task.name.substring(0, 10)}...` : task.name}
                     </option>

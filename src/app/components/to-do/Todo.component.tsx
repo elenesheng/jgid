@@ -9,13 +9,21 @@ import { Todo } from '@/app/types/tasks';
 import { WEEK_DAYS } from '@/app/lib/constants';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { useSession } from 'next-auth/react';
+import { useTodos } from '@/app/hooks/useTaskProvider';
 
 const TodoComponent = () => {
-    const { todos, activeDate, setActiveDate, addTodo, getCount } = useContext(TaskContext)!;
+    // const { todos, activeDate, setActiveDate, addTodo, getCount } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const maxTasks = 7;
     const { status } = useSession();
-
+    const { 
+        todos, 
+        activeDate, 
+        setActiveDate, 
+        addTodo, 
+        getCount, 
+      } = useTodos();
+      
     const handleWeekdayClick = (weekday: string) => {
         setActiveDate(weekday);
     };

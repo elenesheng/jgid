@@ -5,6 +5,11 @@ import { FiLogIn, FiLogOut } from 'react-icons/fi';
 const UserProfile = () => {
     const { data: session } = useSession();
 
+    const handleSignOut = () => {
+        localStorage.removeItem('todos');
+        signOut()
+    }
+
     return (
         <HStack spacing={4} align="center">
             {session ? (
@@ -16,7 +21,7 @@ const UserProfile = () => {
                     <Button
                         size="sm"
                         leftIcon={<FiLogOut />}
-                        onClick={() => signOut()}
+                        onClick={() => handleSignOut()}
                     >
                         Sign out
                     </Button>
