@@ -5,6 +5,7 @@ import { TaskContext } from '@/app/contexts/TaskContext';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { Flex, Select } from "@chakra-ui/react";
 import { useTodos } from "@/app/hooks/useTaskProvider";
+import { Todo } from "@/app/types/tasks";
 
 const TaskSelector = () => {
     const { setSelectedTodoId, selectedTodoId, todos } = useTodos();
@@ -24,7 +25,7 @@ const TaskSelector = () => {
                 isDisabled={isRunning}
                 size="md"
             >
-                {todos.filter(task => !task.completed).map(task => (
+                {todos.filter((task: Todo)=> !task.completed).map((task: Todo) => (
                     <option key={task.id} value={task.id}>
                         {task.name.length > 10 ? `${task.name.substring(0, 10)}...` : task.name}
                     </option>
