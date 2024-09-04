@@ -11,9 +11,8 @@ import {
 import { DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import { FaEllipsisV } from 'react-icons/fa';
 import { TaskItemMenuProps } from '@/app/types/tasks';
-import { TaskContext } from '@/app/contexts/TaskContext';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
-import { useTodos } from '@/app/hooks/useTaskProvider';
+import { useTodos } from "@/app/hooks/useTodos";
 
 const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
     const { removeTodo, toggleTodoComplete, setSelectedTodoId } = useTodos();

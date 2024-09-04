@@ -18,22 +18,39 @@ export interface WeekDay {
     id: string;
     name: string
 }
-export interface TodoContextType {
+// export interface TodoContextType {
+//     todos: Todo[];
+//     loading: boolean;
+//     addTodo: (name: string, description: string, weekday: string) => void;
+//     removeTodo: (todoId: string) => void;
+//     toggleTodoCompletion: (todoId: string) => void;
+//     setSpentTime: (todoId: string, timeSpent: number) => void;
+//     clearAllTodos: () => void;
+//     chooseTodo: (todoId: string) => void;
+//     selectedTodoId: string;
+//     setSelectedTodoId: (todoId: string) => void;
+//     editTodo: (todoId: string, name: string, description: string) => void;
+//     setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+//     activeDate: string;
+//     setActiveDate: (date: string) => void;
+//     getCount: (weekday: string) => number;
+// }
+
+export interface TodosContextType {
     todos: Todo[];
-    loading: boolean;
-    addTodo: (name: string, description: string, weekday: string) => void;
-    removeTodo: (todoId: string) => void;
-    toggleTodoCompletion: (todoId: string) => void;
-    setSpentTime: (todoId: string, timeSpent: number) => void;
-    clearAllTodos: () => void;
-    chooseTodo: (todoId: string) => void;
-    selectedTodoId: string;
-    setSelectedTodoId: (todoId: string) => void;
-    editTodo: (todoId: string, name: string, description: string) => void;
-    setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
     activeDate: string;
-    setActiveDate: (date: string) => void;
+    loading: boolean;
+    // error: Error | null;
+    addTodo: (name: string, description: string) => void;
+    editTodo: (todoId: string, name: string, description: string) => void;
+    toggleTodoComplete: (todoId: string) => void;
+    removeTodo: (todoId: string) => void;
+    clearAllTodos: () => void;
     getCount: (weekday: string) => number;
+    setSpentTime: (todoId: string, spentTime: number) => void;
+    setActiveDate: (date: string) => void;
+    setSelectedTodoId: (id: string) => void;
+    selectedTodoId: string;
 }
 
 export type QueuedOperation = {

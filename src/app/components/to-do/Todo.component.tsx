@@ -1,18 +1,16 @@
 "use client"
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Box, Alert, AlertIcon, Flex, Button } from '@chakra-ui/react';
-import { TaskContext } from '@/app/contexts/TaskContext';
 import TaskInput from './task-input/TaskInput.component';
 import TaskItem from './task-item/TaskItem.component';
 import { Todo } from '@/app/types/tasks';
 import { WEEK_DAYS } from '@/app/lib/constants';
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 import { useSession } from 'next-auth/react';
-import { useTodos } from '@/app/hooks/useTaskProvider';
+import { useTodos } from "@/app/hooks/useTodos";
 
 const TodoComponent = () => {
-    // const { todos, activeDate, setActiveDate, addTodo, getCount } = useContext(TaskContext)!;
     const settings = useContext(SettingsStateContext)!;
     const maxTasks = 7;
     const { status } = useSession();
@@ -28,9 +26,11 @@ const TodoComponent = () => {
         setActiveDate(weekday);
     };
 
+
+
     return (
         <Box borderWidth="1px" borderRadius="lg" p={0} m={0} borderColor="transparent">
-            {todos.length >= maxTasks && (
+            {todos?.length >= maxTasks && (
                 <Alert status="warning" mb="4" color="primaryDark" bg="bg" borderColor="accent">
                     <AlertIcon color="accent" />
                     To stay focused, you can't add more than 7 tasks.
@@ -53,7 +53,7 @@ const TodoComponent = () => {
                     ))}
                 </Flex>
             )}
-            {todos.map((task: Todo) => (
+            {todos?.map((task: Todo) => (
                 <TaskItem {...task} key={task.id} />
             ))}
             <TaskInput />

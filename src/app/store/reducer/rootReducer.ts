@@ -1,5 +1,3 @@
-"use client";
-
 import { combineReducers } from '@reduxjs/toolkit';
 import todosReducer from '../slices/todoSlice'
 

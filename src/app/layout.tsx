@@ -7,8 +7,8 @@ import theme from './theme';
 import SessionProvider from "./SessionProvider";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from './lib/utils/authOptions';
-import { StoreProvider } from './storeProvider';
-
+import { QueryProvider } from './storeProvider';
+import { TodosProvider } from '@/app/contexts/TodoProvider';
 export default async function RootLayout({
   children,
 }: {
@@ -22,11 +22,13 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <ChakraUiProvider>
             <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-            <TimerProvider>
-              <StoreProvider>
-              <Header />
-                  {children}
-                  </StoreProvider>
+            <TimerProvider>                
+              <QueryProvider>
+              <TodosProvider>
+                <Header />
+                {children}
+                </TodosProvider>
+              </QueryProvider>
             </TimerProvider>
           </ChakraUiProvider>
         </SessionProvider>

@@ -7,7 +7,6 @@ import {
     Heading,
     Box,
 } from "@chakra-ui/react";
-import { TaskContext } from "@/app/contexts/TaskContext";
 import { Todo } from "@/app/types/tasks";
 import EditTaskDrawer from "./EditTaskDrawer.component";
 import TaskItemMenu from "./TaskItemMenu.component";
