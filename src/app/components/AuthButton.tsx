@@ -14,9 +14,9 @@ const UserProfile = () => {
         <HStack spacing={4} align="center">
             {session ? (
                 <>
-                    <Flex flexDirection='column' alignItems='center'>
-                    <Avatar name={session.user?.name || 'User'} src={session.user?.image || ''} />
-                    <Text fontWeight="bold">{session.user?.name}</Text>
+                    <Flex alignItems='center'>
+                        <Avatar name={session.user?.name || 'User'} src={session.user?.image || ''} />
+                        <Text fontWeight="bold" marginInlineStart='5px'>{session.user?.name}</Text>
                     </Flex>
                     <Button
                         size="sm"

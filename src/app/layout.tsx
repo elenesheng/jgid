@@ -7,8 +7,9 @@ import theme from './theme';
 import SessionProvider from "./SessionProvider";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from './lib/utils/authOptions';
-import { QueryProvider } from './storeProvider';
 import { TodosProvider } from '@/app/contexts/TodoProvider';
+import { QueryProvider } from './queryProvider';
+
 export default async function RootLayout({
   children,
 }: {

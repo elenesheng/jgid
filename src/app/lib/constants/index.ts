@@ -27,3 +27,4 @@ export const WEEK_DAYS = [
     { name: "Saturday" },
     {  name: "Sunday" },
 ];
+export const MAX_TASKS = 7;

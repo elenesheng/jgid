@@ -49,12 +49,14 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
             console.error('Failed to add todo', error);
         },
         onSettled: (newTodo) => {
-            setLocalTodos((prevTodos) => {
-                if (!prevTodos.find((todo) => todo.id === newTodo.id)) {
-                    return [...prevTodos, newTodo];
-                }
-                return prevTodos;
-            });
+            if (newTodo) {
+                setLocalTodos((prevTodos) => {
+                    if (!prevTodos.find((todo) => todo.id === newTodo.id)) {
+                        return [...prevTodos, newTodo];
+                    }
+                    return prevTodos;
+                });
+            }
         },
     });
 
