@@ -7,34 +7,32 @@ import ThemeSwitcher from "@/app/components/theme/Theme";
 import SettingsModalContainer from "../settings";
 import UserProfile from "../AuthButton";
 
-const Header = () => {
-  return (
-    <Box
-      p="10px"
-      textAlign="center"
-      borderRadius="md"
-      boxShadow="sm"
-      color="primary"
-      mb="40px"
-    >
-      <Container maxW="container.xl">
-        <Flex justifyContent="space-between" alignItems="center" p={0}>
-          <Flex alignItems="center">
-            <SettingsModalContainer />
-            <ThemeSwitcher />          </Flex>
-
-          <Box>
-            <Logo />
-          </Box>
-          <Box>
-            <Flex>
-              <UserProfile />
-            </Flex>
-          </Box>
+const Header = () => (
+  <Box
+    p="10px"
+    textAlign="center"
+    borderRadius="md"
+    boxShadow="sm"
+    color="primary"
+    mb="40px"
+  >
+    <Container maxW="container.xl">
+      <Flex justifyContent="space-between" alignItems="center" p={0}>
+        <Flex alignItems="center" flex="1">
+          <SettingsModalContainer />
+          <ThemeSwitcher />
         </Flex>
-      </Container>
-    </Box>
-  );
-};
+
+        <Flex justifyContent="center" flex="1">
+          <Logo />
+        </Flex>
+        
+        <Flex justifyContent="flex-end" alignItems="center" flex="1">
+          <UserProfile />
+        </Flex>
+      </Flex>
+    </Container>
+  </Box>
+);
 
 export default Header;

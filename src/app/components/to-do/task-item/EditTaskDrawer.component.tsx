@@ -9,7 +9,6 @@ import {
     Button,
 } from '@chakra-ui/react';
 import { EditTaskDrawerProps } from '@/app/types/tasks';
-import { TaskContext } from "@/app/contexts/TaskContext";
 import {
     headingsPlugin,
     listsPlugin,
@@ -23,7 +22,7 @@ import {
 import '@mdxeditor/editor/style.css';
 import styles from './taskItem.module.scss';
 import { useColorMode } from '@chakra-ui/react';
-import { useTodos } from '@/app/hooks/useTaskProvider';
+import { useTodos } from "@/app/hooks/useTodos";
 
 const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, editorRef, ...props }) => {
     const { editTodo } = useTodos();

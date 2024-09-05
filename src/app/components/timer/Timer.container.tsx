@@ -2,14 +2,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { TimerStateContext, SettingsControlsContext, SettingsStateContext, TimerControlsContext } from '@/app/contexts/TimerContext';
-import { TaskContext } from '@/app/contexts/TaskContext';
 import useTimer from '../../hooks/useTimer';
 import { calculateInitialTimeLeft, calculateElapsedTimeInSeconds } from '@/app/lib/utils/timer';
 import TimerComponent from './Timer.component';
 import { Howl } from 'howler';
 import { Todo } from '@/app/types/tasks';
 import { SOUNDS } from '@/app/lib/constants';
-import { useTodos } from '@/app/hooks/useTaskProvider';
+import { useTodos } from "@/app/hooks/useTodos";
 
 const TimerContainer: React.FC = () => {
     const {updateWorkSessions, updateRestBreak } = useContext(SettingsControlsContext)!;
@@ -19,7 +18,7 @@ const TimerContainer: React.FC = () => {
     const { selectedTodoId, setSpentTime, todos, setSelectedTodoId } = useTodos();
     const { isRunning, sound } = settings;
     const { startTime, activeTab } = timer;
-    const selectedTask = todos.find((todo: Todo) => todo.id === selectedTodoId);
+    const selectedTask = todos?.find((todo: Todo) => todo.id === selectedTodoId);
 
     const calculateInitialTime = (): number => {
         return calculateInitialTimeLeft({

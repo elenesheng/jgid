@@ -2,9 +2,8 @@ import { useContext, useState, useEffect } from 'react';
 import { TaskInputProps, WeekDay } from '@/app/types/tasks';
 import React from 'react';
 import { Flex, Input, Button, Select, Box } from '@chakra-ui/react';
-import { TaskContext } from '@/app/contexts/TaskContext';
 import { WEEK_DAYS } from '@/app/lib/constants';
-import { useTodos } from '@/app/hooks/useTaskProvider';
+import { useTodos } from "@/app/hooks/useTodos";
 
 const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
@@ -24,11 +23,11 @@ const TaskInput = () => {
         }
     };
 
-    const isTaskLimitReached = todos.length >= 7;
+    const isTaskLimitReached = todos?.length >= 7;
 
     return (
         <Box>
-            <Flex alignItems="flex-start" mt={todos.length === 0 ? 0 : '25px'}>
+            <Flex alignItems="flex-start" mt={todos?.length === 0 ? 0 : '25px'}>
                 <Input
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
@@ -60,7 +59,7 @@ const TaskInput = () => {
                     w="100%"
                     color="white"
                     background="accent"
-                    variant={todos.length == 0 ? "_disabled" : "primary"}
+                    variant={todos?.length == 0 ? "_disabled" : "primary"}
                     size="md"
                     onClick={() => clearAllTodos()}
                 >
