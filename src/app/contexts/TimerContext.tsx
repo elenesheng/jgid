@@ -1,26 +1,74 @@
 "use client";
 
-import React, { createContext, ReactNode, useCallback, useMemo, useContext } from 'react';
+import React, { createContext, ReactNode, useCallback, useMemo, useReducer } from 'react';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import { TimerState, TimerSettings, TimerControls } from '@/app/types/timer';
 import { minutesToSeconds } from '@/app/lib/utils/timer';
 import { DEFAULT_WORK_DURATION, DEFAULT_REST_DURATION } from '@/app/lib/constants';
 import { SettingsControls } from '@/app/types/settings';
+import { useRenderTime } from '@/app/hooks/useRenderTime';
 
 export const TimerStateContext = createContext<TimerState | undefined>(undefined);
 export const SettingsStateContext = createContext<TimerSettings | undefined>(undefined);
 export const TimerControlsContext = createContext<TimerControls | undefined>(undefined);
 export const SettingsControlsContext = createContext<SettingsControls | undefined>(undefined);
 
+const timerReducer = (state: TimerState, action: any): TimerState => {
+  switch (action.type) {
+    case 'RESET_WORK_TIMER':
+      return { ...state, workTime: minutesToSeconds(action.payload) };
+    case 'RESET_REST_TIMER':
+      return { ...state, restTime: minutesToSeconds(action.payload) };
+    case 'SET_ACTIVE_TAB':
+      return { ...state, activeTab: action.payload };
+    case 'UPDATE_START_TIME':
+      return { ...state, startTime: action.payload };
+    case 'SET_TIME_LEFT':
+      return {
+        ...state,
+        [action.payload.type === "work" ? "workTime" : "restTime"]: action.payload.seconds,
+      };
+    default:
+      return state
+  }
+}
+
+const settingsReducer = (state: TimerSettings, action: any): TimerSettings => {
+  switch (action.type) {
+    case 'START_TIMER':
+      return { ...state, isRunning: true };
+    case 'PAUSE_TIMER':
+      return { ...state, isRunning: false };
+    case 'SET_SOUND':
+      return { ...state, sound: action.payload };
+    case 'SET_GOAL':
+      return { ...state, goal: action.payload };
+    case 'SET_WHITE_NOISE':
+      return { ...state, isWhiteNoise: action.payload };
+    case 'TOGGLE_AUTO_REST':
+      return { ...state, isAutoRest: !state.isAutoRest };
+    case "SET_WEEKDAYS":
+      return { ...state, isWeekDays: action.payload };
+    case "UPDATE_WORK_DURATION":
+      return { ...state, workDuration: action.payload };
+    case "UPDATE_REST_DURATION":
+      return { ...state, restDuration: action.payload };
+    default:
+      return state;
+  }
+}
+
 export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [timer, setTimer] = useLocalStorage<TimerState>('timer', {
+  useRenderTime('TimerProvider');
+
+  const [timerState, setTimerState] = useLocalStorage<TimerState>("timer", {
     workTime: minutesToSeconds(DEFAULT_WORK_DURATION),
     restTime: minutesToSeconds(DEFAULT_REST_DURATION),
     startTime: 0,
-    activeTab: "work"
-  }, true);
+    activeTab: "work",
+  });
 
-  const [settings, setSettings] = useLocalStorage<TimerSettings>('timer-settings', {
+  const [settingsState, setSettingsState] = useLocalStorage<TimerSettings>("timer-settings", {
     isRunning: false,
     workDuration: DEFAULT_WORK_DURATION,
     restDuration: DEFAULT_REST_DURATION,
@@ -31,100 +79,53 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     isWhiteNoise: false,
     isAutoRest: false,
     isWeekDays: false,
-  }, true);
+  });
 
-  // Timer control callbacks
-  const startTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: true }));
-  }, [setSettings]);
+  const [timer, timerDispatch] = useReducer(timerReducer, timerState);
+  const [settings, settingsDispatch] = useReducer(settingsReducer, settingsState);
 
-  const pauseTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-  }, [setSettings]);
+  useMemo(() => {
+    setTimerState(timer);
+  }, [timer, setTimerState]);
 
-  const resetWorkTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-    setTimer(prev => ({ ...prev, workTime: minutesToSeconds(settings.workDuration) }));
-  }, [setSettings, setTimer, settings.workDuration]);
-
-  const resetRestTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-    setTimer(prev => ({ ...prev, restTime: minutesToSeconds(settings.restDuration) }));
-  }, [setSettings, setTimer, settings.restDuration]);
-
-  const setActiveTab = useCallback((activeTab: string) => {
-    setTimer(prev => ({ ...prev, activeTab }));
-  }, [setTimer]);
-
-  const updateStartTime = useCallback((seconds: number) => {
-    setTimer(prev => ({ ...prev, startTime: seconds }));
-  }, [setTimer]);
-
-  const setTimeLeft = useCallback((seconds: number, type: string) => {
-    setTimer(prev => ({ ...prev, [type === "work" ? "workTime" : "restTime"]: seconds }));
-  }, [setTimer]);
-
-  // Settings callbacks
-  const setSound = useCallback((sound_id: string) => {
-    setSettings(prev => ({ ...prev, sound: sound_id }));
-  }, [setSettings]);
-
-  const setAutoRest = useCallback(() => {
-    setSettings(prev => ({ ...prev, isAutoRest: !prev.isAutoRest }));
-  }, [setSettings]);
-
-  const setIsWeekDays = useCallback((isWeekDays: boolean) => {
-    setSettings(prev => ({ ...prev, isWeekDays }));
-  }, [setSettings]);
-
-  const setGoal = useCallback((goals: number) => {
-    setSettings(prev => ({ ...prev, goal: goals }));
-  }, [setSettings]);
-
-  const setWhiteNoise = useCallback((isWhiteNoise: boolean) => {
-    setSettings(prev => ({ ...prev, isWhiteNoise }));
-  }, [setSettings]);
-
-  const updateRestBreak = useCallback(() => {
-    setSettings(prev => ({ ...prev, restBreaks: prev.restBreaks + 1 }));
-  }, [setSettings]);
-
-  const updateWorkSessions = useCallback(() => {
-    setSettings(prev => ({ ...prev, workSessions: prev.workSessions + 1 }));
-  }, [setSettings]);
-    const updateWorkDuration = useCallback((minutes: number) => {
-      setSettings(prev => ({ ...prev, workDuration: minutes }));
-    }, [setSettings]);
-  
-    const updateRestDuration = useCallback((minutes: number) => {
-      setSettings(prev => ({ ...prev, restDuration: minutes }));
-    }, [setSettings]);
+  useMemo(() => {
+    setSettingsState(settings);
+  }, [settings, setSettingsState]);
 
   const timerControls = useMemo(() => ({
-    startTimer,
-    pauseTimer,
-    resetWorkTimer,
-    resetRestTimer,
-    setActiveTab,
-    updateStartTime,
-    setTimeLeft
-  }), [startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setActiveTab, updateStartTime, setTimeLeft]);
+    startTimer: () => settingsDispatch({ type: "START_TIMER" }),
+    pauseTimer: () => settingsDispatch({ type: "PAUSE_TIMER" }),
+    resetWorkTimer: () => {
+      settingsDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "RESET_WORK_TIMER", payload: settingsState.workDuration });
+    },
+    resetRestTimer: () => {
+      settingsDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "RESET_REST_TIMER", payload: settingsState.restDuration });
+    },
+    setActiveTab: (activeTab: string) => timerDispatch({ type: "SET_ACTIVE_TAB", payload: activeTab }),
+    updateStartTime: (seconds: number) => timerDispatch({ type: "UPDATE_START_TIME", payload: seconds }),
+    setTimeLeft: (seconds: number, type: string) => timerDispatch({
+      type: "SET_TIME_LEFT",
+      payload: { seconds, type },
+    }),
+  }), [settingsState.workDuration, settingsState.restDuration]);
 
   const settingsControls = useMemo(() => ({
-    setSound,
-    setGoal,
-    setWhiteNoise,
-    updateRestBreak,
-    updateWorkSessions,
-    updateWorkDuration,
-    updateRestDuration,
-    setAutoRest,
-    setIsWeekDays
-  }), [setSound, setGoal, setWhiteNoise, updateWorkSessions, updateRestBreak, updateWorkDuration, updateRestDuration, setAutoRest, setIsWeekDays]);
+    setSound: (sound_id: string) => settingsDispatch({ type: "SET_SOUND", payload: sound_id }),
+    setGoal: (goals: number) => settingsDispatch({ type: "SET_GOAL", payload: goals }),
+    setWhiteNoise: (isWhiteNoise: boolean) => settingsDispatch({ type: "SET_WHITE_NOISE", payload: isWhiteNoise }),
+    updateRestBreak: () => settingsDispatch({ type: "UPDATE_REST_BREAKS" }),
+    updateWorkSessions: () => settingsDispatch({ type: "UPDATE_WORK_SESSIONS" }),
+    updateWorkDuration: (minutes: number) => settingsDispatch({ type: "UPDATE_WORK_DURATION", payload: minutes }),
+    updateRestDuration: (minutes: number) => settingsDispatch({ type: "UPDATE_REST_DURATION", payload: minutes }),
+    setAutoRest: () => settingsDispatch({ type: "TOGGLE_AUTO_REST" }),
+    setIsWeekDays: (isWeekDays: boolean) => settingsDispatch({ type: "SET_WEEKDAYS", payload: isWeekDays }),
+  }), []);
 
   return (
-    <TimerStateContext.Provider value={timer}>
-      <SettingsStateContext.Provider value={settings}>
+    <TimerStateContext.Provider value={timerState}>
+      <SettingsStateContext.Provider value={settingsState}>
         <TimerControlsContext.Provider value={timerControls}>
           <SettingsControlsContext.Provider value={settingsControls}>
             {children}
