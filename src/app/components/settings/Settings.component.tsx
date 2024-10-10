@@ -8,9 +8,8 @@ import {
     ModalHeader,
     ModalBody,
     ModalCloseButton,
-    Button,
     Box,
-    Text,
+    Flex
 } from "@chakra-ui/react";
 import { FaCog } from "react-icons/fa";
 import SettingsCheckbox from "./settings-checkbox/SettingsCheckbox";
@@ -55,9 +54,11 @@ const SettingsModal = () => {
 
     return (
         <Box textAlign="right">
-            <button onClick={handleOpen}>
-                <FaCog color="#019963" />
-            </button>
+            <Flex>
+                <button onClick={handleOpen}>
+                    <FaCog color="#019963" />
+                </button>
+            </Flex>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
