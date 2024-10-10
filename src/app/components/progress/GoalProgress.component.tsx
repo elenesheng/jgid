@@ -5,8 +5,9 @@ import { Box, Text, Progress, Flex } from "@chakra-ui/react";
 import { TimerStateContext, SettingsStateContext } from "@/app/contexts/TimerContext";
 
 const GoalProgress = () => {
-    const {workSessions } = useContext(TimerStateContext)!;
+    const timer = useContext(TimerStateContext)!;
     const { goal } =  useContext(SettingsStateContext)!;
+    const{ workSessions } = timer;
 
     return (
         <Box mb={10}>

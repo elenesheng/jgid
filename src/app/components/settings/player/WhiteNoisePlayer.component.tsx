@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Howl } from 'howler';
-import { SettingsStateContext } from '@/app/contexts/TimerContext';
+import { SettingsStateContext, TimerStateContext } from '@/app/contexts/TimerContext';
 
 const WhiteNoisePlayer = () => {
     const settings = useContext(SettingsStateContext)!;
     const { isWhiteNoise } = settings;
     const soundRef = useRef<Howl | null>(null);
+    const timer = useContext(TimerStateContext)!;
 
     useEffect(() => {
         soundRef.current = new Howl({
@@ -22,13 +23,13 @@ const WhiteNoisePlayer = () => {
 
     useEffect(() => {
         if (soundRef.current) {
-            if (isWhiteNoise) {
+            if (isWhiteNoise && timer.isRunning) {
                 soundRef.current.play();
             } else {
                 soundRef.current.pause();
             }
         }
-    }, [isWhiteNoise]);
+    }, [isWhiteNoise, timer.isRunning]);
 
     return null;
 };
