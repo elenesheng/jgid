@@ -34,12 +34,16 @@ export interface GoalsProps {
 }
 
 export interface DurationInputProps {
-    label: string;
-    value: number;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    isDisabled: boolean;
-    min: number;
-    max: number;
+}
+
+export interface DurationInputProps {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: number;
+    // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    // isDisabled: boolean;
+    // min: number;
+    // max: number;
 }
 
 export interface SettingsCheckboxProps {
@@ -54,8 +58,6 @@ export interface SettingsFooterProps {
 }
 
 export interface SettingsControls {
-    updateRestBreak: () => void;
-    updateWorkSessions: () => void;
     setGoal: (goals: number) => void;
     setWhiteNoise: (isWhiteNoise: boolean) => void;
     setSound: (sound_id: string) => void;

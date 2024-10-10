@@ -1,11 +1,13 @@
 "use client";
 
-import React, { createContext, ReactNode, useCallback, useMemo, useContext } from 'react';
+import React, { createContext, ReactNode, useCallback, useMemo, useReducer } from 'react';
 import useLocalStorage from '@/app/hooks/useLocalStorage';
 import { TimerState, TimerSettings, TimerControls } from '@/app/types/timer';
 import { minutesToSeconds } from '@/app/lib/utils/timer';
 import { DEFAULT_WORK_DURATION, DEFAULT_REST_DURATION } from '@/app/lib/constants';
 import { SettingsControls } from '@/app/types/settings';
+import { useRenderTime } from '@/app/hooks/useRenderTime';
+import { timerReducer, settingsReducer } from '../state/timer/timerReducer';
 
 export const TimerStateContext = createContext<TimerState | undefined>(undefined);
 export const SettingsStateContext = createContext<TimerSettings | undefined>(undefined);
@@ -13,118 +15,82 @@ export const TimerControlsContext = createContext<TimerControls | undefined>(und
 export const SettingsControlsContext = createContext<SettingsControls | undefined>(undefined);
 
 export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [timer, setTimer] = useLocalStorage<TimerState>('timer', {
+  useRenderTime('TimerProvider');
+
+  const [timerState, setTimerState] = useLocalStorage<TimerState>("timer", {
     workTime: minutesToSeconds(DEFAULT_WORK_DURATION),
     restTime: minutesToSeconds(DEFAULT_REST_DURATION),
     startTime: 0,
-    activeTab: "work"
-  }, true);
-
-  const [settings, setSettings] = useLocalStorage<TimerSettings>('timer-settings', {
+    activeTab: "work",
     isRunning: false,
+    workSessions: 0,
+    restBreaks: 0,
+  });
+
+  const [settingsState, setSettingsState] = useLocalStorage<TimerSettings>("timer-settings", {
     workDuration: DEFAULT_WORK_DURATION,
     restDuration: DEFAULT_REST_DURATION,
-    restBreaks: 0,
-    workSessions: 0,
     sound: "",
     goal: 0,
     isWhiteNoise: false,
     isAutoRest: false,
     isWeekDays: false,
-  }, true);
+  });
 
-  // Timer control callbacks
-  const startTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: true }));
-  }, [setSettings]);
+  const [timer, timerDispatch] = useReducer(timerReducer, timerState);
+  const [settings, settingsDispatch] = useReducer(settingsReducer, settingsState);
 
-  const pauseTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-  }, [setSettings]);
+  const memoizedTimerState = useMemo(() => timer, [timer]);
+  const memoizedSettingsState = useMemo(() => settings, [settings]);
 
-  const resetWorkTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-    setTimer(prev => ({ ...prev, workTime: minutesToSeconds(settings.workDuration) }));
-  }, [setSettings, setTimer, settings.workDuration]);
+  useMemo(() => {
+    setTimerState(timer);
+  }, [timer, setTimerState]);
 
-  const resetRestTimer = useCallback(() => {
-    setSettings(prev => ({ ...prev, isRunning: false }));
-    setTimer(prev => ({ ...prev, restTime: minutesToSeconds(settings.restDuration) }));
-  }, [setSettings, setTimer, settings.restDuration]);
-
-  const setActiveTab = useCallback((activeTab: string) => {
-    setTimer(prev => ({ ...prev, activeTab }));
-  }, [setTimer]);
-
-  const updateStartTime = useCallback((seconds: number) => {
-    setTimer(prev => ({ ...prev, startTime: seconds }));
-  }, [setTimer]);
-
-  const setTimeLeft = useCallback((seconds: number, type: string) => {
-    setTimer(prev => ({ ...prev, [type === "work" ? "workTime" : "restTime"]: seconds }));
-  }, [setTimer]);
-
-  // Settings callbacks
-  const setSound = useCallback((sound_id: string) => {
-    setSettings(prev => ({ ...prev, sound: sound_id }));
-  }, [setSettings]);
-
-  const setAutoRest = useCallback(() => {
-    setSettings(prev => ({ ...prev, isAutoRest: !prev.isAutoRest }));
-  }, [setSettings]);
-
-  const setIsWeekDays = useCallback((isWeekDays: boolean) => {
-    setSettings(prev => ({ ...prev, isWeekDays }));
-  }, [setSettings]);
-
-  const setGoal = useCallback((goals: number) => {
-    setSettings(prev => ({ ...prev, goal: goals }));
-  }, [setSettings]);
-
-  const setWhiteNoise = useCallback((isWhiteNoise: boolean) => {
-    setSettings(prev => ({ ...prev, isWhiteNoise }));
-  }, [setSettings]);
-
-  const updateRestBreak = useCallback(() => {
-    setSettings(prev => ({ ...prev, restBreaks: prev.restBreaks + 1 }));
-  }, [setSettings]);
-
-  const updateWorkSessions = useCallback(() => {
-    setSettings(prev => ({ ...prev, workSessions: prev.workSessions + 1 }));
-  }, [setSettings]);
-    const updateWorkDuration = useCallback((minutes: number) => {
-      setSettings(prev => ({ ...prev, workDuration: minutes }));
-    }, [setSettings]);
-  
-    const updateRestDuration = useCallback((minutes: number) => {
-      setSettings(prev => ({ ...prev, restDuration: minutes }));
-    }, [setSettings]);
+  useMemo(() => {
+    setSettingsState(settings);
+  }, [settings, setSettingsState]);
 
   const timerControls = useMemo(() => ({
-    startTimer,
-    pauseTimer,
-    resetWorkTimer,
-    resetRestTimer,
-    setActiveTab,
-    updateStartTime,
-    setTimeLeft
-  }), [startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setActiveTab, updateStartTime, setTimeLeft]);
+    startTimer: () => timerDispatch({ type: "START_TIMER" }),
+    pauseTimer: () => timerDispatch({ type: "PAUSE_TIMER" }),
+    resetWorkTimer: () => {
+      timerDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "RESET_WORK_TIMER", payload: settingsState.workDuration });
+    },
+    resetRestTimer: () => {
+      timerDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "RESET_REST_TIMER", payload: settingsState.restDuration });
+    },
+    updateWorkSessions: () => timerDispatch({ type: "UPDATE_WORK_SESSIONS" }),
+    updateRestBreak: () => timerDispatch({type: "UPDATE_REST_BREAK"}),
+    setActiveTab: (activeTab: string) => timerDispatch({ type: "SET_ACTIVE_TAB", payload: activeTab }),
+    updateStartTime: (seconds: number) => timerDispatch({ type: "UPDATE_START_TIME", payload: seconds }),
+    setTimeLeft: (seconds: number, type: string) => timerDispatch({
+      type: "SET_TIME_LEFT",
+      payload: { seconds, type },
+    }),
+  }), [settingsState.workDuration, settingsState.restDuration]);
 
   const settingsControls = useMemo(() => ({
-    setSound,
-    setGoal,
-    setWhiteNoise,
-    updateRestBreak,
-    updateWorkSessions,
-    updateWorkDuration,
-    updateRestDuration,
-    setAutoRest,
-    setIsWeekDays
-  }), [setSound, setGoal, setWhiteNoise, updateWorkSessions, updateRestBreak, updateWorkDuration, updateRestDuration, setAutoRest, setIsWeekDays]);
+    setSound: (sound_id: string) => settingsDispatch({ type: "SET_SOUND", payload: sound_id }),
+    setGoal: (goals: number) => settingsDispatch({ type: "SET_GOAL", payload: goals }),
+    setWhiteNoise: (isWhiteNoise: boolean) => settingsDispatch({ type: "SET_WHITE_NOISE", payload: isWhiteNoise }),
+    updateWorkDuration: (minutes: number) => {
+      settingsDispatch({ type: "UPDATE_WORK_DURATION", payload: minutes });
+      timerDispatch({ type: "RESET_WORK_TIMER", payload: minutes });
+  },
+  updateRestDuration: (minutes: number) => {
+      settingsDispatch({ type: "UPDATE_REST_DURATION", payload: minutes });
+      timerDispatch({ type: "RESET_REST_TIMER", payload: minutes });
+  },
+    setAutoRest: () => settingsDispatch({ type: "TOGGLE_AUTO_REST" }),
+    setIsWeekDays: (isWeekDays: boolean) => settingsDispatch({ type: "SET_WEEKDAYS", payload: isWeekDays }),
+  }), []);
 
   return (
-    <TimerStateContext.Provider value={timer}>
-      <SettingsStateContext.Provider value={settings}>
+    <TimerStateContext.Provider value={memoizedTimerState}>
+      <SettingsStateContext.Provider value={memoizedSettingsState}>
         <TimerControlsContext.Provider value={timerControls}>
           <SettingsControlsContext.Provider value={settingsControls}>
             {children}
@@ -134,3 +100,4 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     </TimerStateContext.Provider>
   );
 };
+

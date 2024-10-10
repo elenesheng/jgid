@@ -1,4 +1,4 @@
-import { Button, HStack, IconButton, Text, Avatar, Flex } from '@chakra-ui/react';
+import { Button, HStack, Text, Avatar, Flex } from '@chakra-ui/react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 

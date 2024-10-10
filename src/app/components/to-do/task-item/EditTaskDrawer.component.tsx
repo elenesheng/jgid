@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Drawer,
     DrawerOverlay,
@@ -22,10 +22,10 @@ import {
 import '@mdxeditor/editor/style.css';
 import styles from './taskItem.module.scss';
 import { useColorMode } from '@chakra-ui/react';
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodosControlls } from "@/app/hooks/useTodos";
 
 const EditTaskDrawer: React.FC<EditTaskDrawerProps> = ({ task, isOpen, onClose, editorRef, ...props }) => {
-    const { editTodo } = useTodos();
+    const { editTodo } = useTodosControlls();
     const { name, id, description } = task;
     const [editName, setEditName] = useState(name);
     const [value, setValue] = useState(description);

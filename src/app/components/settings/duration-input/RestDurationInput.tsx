@@ -1,21 +1,21 @@
 import React from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { MIN_REST_VALUE, MAX_REST_VALUE, SECONDS_IN_A_MINUTE } from "@/app/lib/constants";
 import { DurationInputProps } from "@/app/types/settings";
 
-const DurationInput = ({ label, value, onChange, isDisabled, min, max }: DurationInputProps) => {
+const RestDurationInput = ({onChange, value}: DurationInputProps) => {
     return (
         <FormControl mb="md">
-            <FormLabel>{label}</FormLabel>
+            <FormLabel>Rest Duration (minutes)</FormLabel>
             <Input
                 type="number"
                 value={value}
                 onChange={onChange}
-                isDisabled={isDisabled}
-                min={min}
-                max={max}
+                min={MIN_REST_VALUE}
+                max={MAX_REST_VALUE}
             />
         </FormControl>
     );
 };
 
-export default DurationInput;
+export default RestDurationInput;

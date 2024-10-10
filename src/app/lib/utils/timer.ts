@@ -20,12 +20,6 @@ export const calculateInitialTimeLeft = ({
   return timer.workTime;
 };
 
-// export const formatTime = (seconds: number): string => {
-//   const minutes = Math.floor(seconds / SECONDS_IN_A_MINUTE);
-//   const secs = seconds % SECONDS_IN_A_MINUTE;
-//   return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-// };
-
 export const formatTimePart = (time: number) => {
   return time.toString().padStart(2, '0');
 };

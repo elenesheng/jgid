@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from 'react';
-import { TimerStateContext, SettingsControlsContext, SettingsStateContext, TimerControlsContext } from '@/app/contexts/TimerContext';
+import React, { useContext, useEffect, useCallback } from 'react';
+import { TimerStateContext, SettingsStateContext, TimerControlsContext } from '@/app/contexts/TimerContext';
 import useTimer from '../../hooks/useTimer';
 import { calculateInitialTimeLeft, calculateElapsedTimeInSeconds } from '@/app/lib/utils/timer';
 import TimerComponent from './Timer.component';
 import { Howl } from 'howler';
 import { Todo } from '@/app/types/tasks';
 import { SOUNDS } from '@/app/lib/constants';
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodos, useTodosControlls } from "@/app/hooks/useTodos";
 
 const TimerContainer: React.FC = () => {
-    const {updateWorkSessions, updateRestBreak } = useContext(SettingsControlsContext)!;
     const timer = useContext(TimerStateContext)!
     const settings = useContext(SettingsStateContext)!;
-    const {startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setTimeLeft, updateStartTime} = useContext(TimerControlsContext)!;
-    const { selectedTodoId, setSpentTime, todos, setSelectedTodoId } = useTodos();
-    const { isRunning, sound } = settings;
-    const { startTime, activeTab } = timer;
+    const {startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setTimeLeft, updateStartTime, updateWorkSessions, updateRestBreak} = useContext(TimerControlsContext)!;
+    const { selectedTodoId, todos } = useTodos();
+    const { setSpentTime, setSelectedTodoId } = useTodosControlls();
+    const { sound } = settings;
+    const { startTime, activeTab, isRunning } = timer;
     const selectedTask = todos?.find((todo: Todo) => todo.id === selectedTodoId);
 
     const calculateInitialTime = (): number => {
@@ -29,19 +29,19 @@ const TimerContainer: React.FC = () => {
 
     const { isTimeUp, setIsTimeUp, timeLeft } = useTimer(calculateInitialTime(), isRunning);
 
-    const handlePause = () => {
+    const handlePause = useCallback(() => {
         if (selectedTodoId && activeTab === 'work' && startTime) {
             setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
         }
         setTimeLeft(timeLeft, activeTab);
         pauseTimer();
-    };
+    }, [selectedTodoId, activeTab, startTime, setSpentTime, setTimeLeft, timeLeft, pauseTimer]);
 
-    const handleStart = () => {
+    const handleStart = useCallback(() => {
         startTimer();
         updateStartTime(Date.now());
-    };
-
+    }, [startTimer, updateStartTime]);
+    
     useEffect(() => {
         if (isTimeUp && isRunning) {
             setIsTimeUp(false);
@@ -70,9 +70,12 @@ const TimerContainer: React.FC = () => {
     }, [isTimeUp, selectedTodoId, startTime, isRunning]);
 
     useEffect(() => {
+        console.log(selectedTask)
+
         if (selectedTask?.completed && isRunning) {
             if (setSelectedTodoId && activeTab === 'work') {
-                setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
+                // setSpentTime(selectedTodoId, calculateElapsedTimeInSeconds(startTime));
+                handlePause();
                 setSelectedTodoId("");
                 resetWorkTimer();
             }

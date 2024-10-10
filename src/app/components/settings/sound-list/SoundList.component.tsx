@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Text, Select } from '@chakra-ui/react';
 import { SOUNDS } from '@/app/lib/constants';
+import { } from "@/app/hooks/useSettings";
 import { SoundProps } from '@/app/types/settings';
 
-const SoundList = ({ selectedSound, setSelectedSound }: SoundProps) => {
+const SoundList = memo(({ selectedSound, setSelectedSound }: SoundProps) => {
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedSound(e.target.value);
     };
@@ -21,6 +22,6 @@ const SoundList = ({ selectedSound, setSelectedSound }: SoundProps) => {
             </Select>
         </Box>
     );
-};
+});
 
 export default SoundList;

@@ -2,14 +2,13 @@
 
 import React, { useContext } from "react";
 import { Box, Text, Progress, Flex } from "@chakra-ui/react";
-import { SettingsStateContext } from "@/app/contexts/TimerContext";
+import { TimerStateContext, SettingsStateContext } from "@/app/contexts/TimerContext";
 
 const GoalProgress = () => {
-    const settings = useContext(SettingsStateContext)!;
-    const { goal, workSessions } = settings;
+    const {workSessions } = useContext(TimerStateContext)!;
+    const { goal } =  useContext(SettingsStateContext)!;
 
     return (
-
         <Box mb={10}>
             {goal > 0 && goal <= workSessions && (
                 <Flex fontSize="md" fontWeight="bold" mr={2}>

@@ -14,13 +14,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const userId = session.user.id;
     const todoId = params.id;
     const { name, description, completed, spentTime, weekdayName } = await request.json();
-console.log(todoId)
     try {
         const updatedTodo = await prisma.todo.update({
             where: { id: todoId, userId },
             data: { name, description, completed, spentTime, weekday: weekdayName }
         });
-        console.log(updatedTodo)
 
         return NextResponse.json(updatedTodo);
     } catch (error) {

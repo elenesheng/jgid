@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useContext } from "react";
-import { SettingsStateContext } from "@/app/contexts/TimerContext";
+import { TimerStateContext } from "@/app/contexts/TimerContext";
 import { Flex, Select } from "@chakra-ui/react";
 import { Todo } from "@/app/types/tasks";
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodos, useTodosControlls } from "@/app/hooks/useTodos";
 
 const TaskSelector = () => {
-    const { setSelectedTodoId, selectedTodoId, todos } = useTodos();
-    const settings = useContext(SettingsStateContext)!;
-    const { isRunning } = settings;
+    const { setSelectedTodoId } = useTodosControlls();
+    const { todos, selectedTodoId } = useTodos();
+    const timer = useContext(TimerStateContext)!;
+    const { isRunning } = timer;
 
     const handleSelectTask = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedTodoId(event.target.value);

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import { Tabs as ChakraTabs, TabList as ChakraTabList, TabPanels as ChakraTabPanels, Tab } from '@chakra-ui/react';
 import { TimerTabsProps } from '@/app/types/timer';
-import { SettingsControlsContext, TimerControlsContext, TimerStateContext, SettingsStateContext } from '@/app/contexts/TimerContext';
+import { TimerControlsContext, TimerStateContext, SettingsStateContext } from '@/app/contexts/TimerContext';
 import { minutesToSeconds } from '@/app/lib/utils/timer';
 
 const TimerTabs = ({ children }: TimerTabsProps) => {
     const { setActiveTab } = useContext(TimerControlsContext)!;
     const settings = useContext(SettingsStateContext)!;
     const timer = useContext(TimerStateContext)!;
-    const { restDuration, workDuration, isRunning } = settings;
-    const { restTime, workTime } = timer;
+    const { restDuration, workDuration } = settings;
+    const { restTime, workTime, isRunning } = timer;
     const disableWork = restTime !== minutesToSeconds(restDuration);
     const disableRest = workTime !== minutesToSeconds(workDuration);
 
@@ -49,4 +49,4 @@ const TimerTabs = ({ children }: TimerTabsProps) => {
     );
 };
 
-export default TimerTabs;
+export default React.memo(TimerTabs);

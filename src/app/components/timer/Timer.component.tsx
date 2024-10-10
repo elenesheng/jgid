@@ -1,23 +1,28 @@
-import React, { useContext } from 'react';
-import { Box, Flex, Button, TabPanels, Tab, TabPanel, Text, Select } from '@chakra-ui/react';
+import React, { useContext, memo, useMemo } from 'react';
+import { Box, Flex, Button, TabPanels, TabPanel } from '@chakra-ui/react';
 import { TimerComponentProps } from '@/app/types/timer';
-import { TimerStateContext, SettingsStateContext, TimerControlsContext } from '@/app/contexts/TimerContext';
+import { TimerStateContext, TimerControlsContext } from '@/app/contexts/TimerContext';
 import TaskSelector from '../tasks-selector';
-import TimerTabs from './timer-tabs/TimerTabs.component';
+import TimerTabs from './timer-ui-components/TimerTabs.component';
 import { formatTime } from '@/app/lib/utils/timer';
 import WhiteNoisePlayer from '../settings/player/WhiteNoisePlayer.component';
+import { useRenderTime } from '@/app/hooks/useRenderTime';
+import TimeDisplay from './timer-ui-components/TimeDisplay.component';
 
-const TimerComponent = ({
+const TimerComponent = memo<TimerComponentProps>(({
     timeLeft,
     handlePause,
     handleStart,
 }: TimerComponentProps) => {
+    useRenderTime("Timer");
     const {resetWorkTimer, resetRestTimer } = useContext(TimerControlsContext)!;
-    const settings = useContext(SettingsStateContext)!
     const timer = useContext(TimerStateContext)!;
-    const { isRunning } = settings;
+    const { isRunning } = timer;
 
-    const time = formatTime(isRunning ? timeLeft : (timer.activeTab === 'work' ? timer.workTime : timer.restTime));
+    const formattedTime = useMemo(() => {
+        const timeToFormat = isRunning ? timeLeft : (timer.activeTab === 'work' ? timer.workTime : timer.restTime);
+        return formatTime(timeToFormat);
+    }, [isRunning, timeLeft, timer.activeTab, timer.workTime, timer.restTime]);
 
     return (
         <Box textAlign="center" p={0} m={0}>
@@ -25,20 +30,10 @@ const TimerComponent = ({
             <TimerTabs>
                 <TabPanels>
                     <TabPanel>
-                        <Flex justifyContent="center" alignItems="center">
-                            <Text fontSize="60px" fontWeight="bold">{time.m}</Text>
-                            <Text fontSize="50px" fontWeight="bold" m="0 5px">:</Text>
-                            <Text fontSize="60px" fontWeight="bold">{time.s}</Text>
-                        </Flex>
+                        <TimeDisplay time={formattedTime} />
                     </TabPanel>
                     <TabPanel>
-                        <Flex justifyContent="center" alignItems="center">
-                            <Flex justifyContent="center" alignItems="center">
-                                <Text fontSize="60px" fontWeight="bold">{time.m}</Text>
-                                <Text fontSize="50px" fontWeight="bold" m="0 5px">:</Text>
-                                <Text fontSize="60px" fontWeight="bold">{time.s}</Text>
-                            </Flex>
-                        </Flex>
+                        <TimeDisplay time={formattedTime} />
                     </TabPanel>
                 </TabPanels>
             </TimerTabs>
@@ -67,6 +62,6 @@ const TimerComponent = ({
             <WhiteNoisePlayer/>
         </Box>
     );
-};
+});
 
 export default TimerComponent;

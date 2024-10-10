@@ -2,11 +2,12 @@ import React, { useContext } from 'react';
 import { WEEK_DAYS } from '@/app/lib/constants';
 import { Box, Flex, Button } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodos, useTodosControlls } from "@/app/hooks/useTodos";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
 export const WeekdaysComponent = () => {
-    const { activeDate, getCount, setActiveDate } = useTodos();
+    const { getCount, setActiveDate } = useTodosControlls();
+    const { activeDate } = useTodos();
     const settings = useContext(SettingsStateContext)!;
     const { status } = useSession();
     
