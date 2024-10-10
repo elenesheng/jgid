@@ -1,14 +1,14 @@
-import { ChakraUiProvider } from './chakraProvider'
+import { ChakraUiProvider } from '@/app/providers/chakraProvider'
 import { Suspense } from 'react';
 import { TimerProvider } from "@/app/contexts/TimerContext";
-import Header from './components/Header/Header.component';
+import Header from './components/header/Header.component';
 import { ColorModeScript } from '@chakra-ui/react'
 import theme from './theme';
-import SessionProvider from "./SessionProvider";
+import SessionProvider from "@/app/providers//SessionProvider";
 import { getServerSession } from "next-auth/next"
 import { authOptions } from './lib/utils/authOptions';
 import { TodosProvider } from '@/app/contexts/TodoProvider';
-import { QueryProvider } from './queryProvider';
+import { QueryProvider } from '@/app/providers/queryProvider';
 
 export default async function RootLayout({
   children,

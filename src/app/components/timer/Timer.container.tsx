@@ -8,13 +8,14 @@ import TimerComponent from './Timer.component';
 import { Howl } from 'howler';
 import { Todo } from '@/app/types/tasks';
 import { SOUNDS } from '@/app/lib/constants';
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodos, useTodosControlls } from "@/app/hooks/useTodos";
 
 const TimerContainer: React.FC = () => {
     const timer = useContext(TimerStateContext)!
     const settings = useContext(SettingsStateContext)!;
     const {startTimer, pauseTimer, resetWorkTimer, resetRestTimer, setTimeLeft, updateStartTime, updateWorkSessions, updateRestBreak} = useContext(TimerControlsContext)!;
-    const { selectedTodoId, setSpentTime, todos, setSelectedTodoId } = useTodos();
+    const { selectedTodoId, todos } = useTodos();
+    const { setSpentTime, setSelectedTodoId } = useTodosControlls();
     const { sound } = settings;
     const { startTime, activeTab, isRunning } = timer;
     const selectedTask = todos?.find((todo: Todo) => todo.id === selectedTodoId);

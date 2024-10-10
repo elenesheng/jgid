@@ -3,7 +3,7 @@
 import React, { useContext, useCallback, useReducer } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { SettingsStateContext, SettingsControlsContext } from "@/app/contexts/TimerContext";
-import { settingsReducer } from "../state/settings/settingsReducer";
+import { settingsFormReducer } from "../state/settings/settingsFormReducer";
 
 
 export const useSettings = () => {
@@ -12,7 +12,7 @@ export const useSettings = () => {
     const {updateWorkDuration, updateRestDuration, setWhiteNoise, setGoal, setSound, setIsWeekDays} = useContext(SettingsControlsContext)!;
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [formState, dispatch] = useReducer(settingsReducer, {
+    const [formState, dispatch] = useReducer(settingsFormReducer, {
         workDuration,
         restDuration,
         goal,
@@ -38,7 +38,6 @@ export const useSettings = () => {
 
     const handleWorkChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number(e.target.value);
-        console.log(value)
         dispatch({type: "UPDATE_WORK_DURATION", payload: value});
     }, []);
     

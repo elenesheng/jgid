@@ -4,7 +4,7 @@ import { SettingsStateContext } from '@/app/contexts/TimerContext';
 
 const WhiteNoisePlayer = () => {
     const settings = useContext(SettingsStateContext)!;
-    const { isRunning, isWhiteNoise } = settings;
+    const { isWhiteNoise } = settings;
     const soundRef = useRef<Howl | null>(null);
 
     useEffect(() => {
@@ -22,13 +22,13 @@ const WhiteNoisePlayer = () => {
 
     useEffect(() => {
         if (soundRef.current) {
-            if (isRunning && isWhiteNoise) {
+            if (isWhiteNoise) {
                 soundRef.current.play();
             } else {
                 soundRef.current.pause();
             }
         }
-    }, [isRunning, isWhiteNoise]);
+    }, [isWhiteNoise]);
 
     return null;
 };

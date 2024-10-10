@@ -1,13 +1,6 @@
-interface SettingsLocalState  {
-    workDuration: number;
-    restDuration: number;
-    goal: number;
-    sound: string;
-    isWhiteNoise: boolean;
-    isWeekDays: boolean;
-}
+import { SettingsForm } from "@/app/types/timer";
 
-export const settingsReducer = (state: SettingsLocalState, action: any): SettingsLocalState => {
+export const settingsFormReducer = (state: SettingsForm, action: any): SettingsForm => {
     switch (action.type) {
         case "UPDATE_WORK_DURATION":
             return {...state, workDuration: action.payload };

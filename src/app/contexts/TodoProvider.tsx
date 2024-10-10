@@ -164,7 +164,7 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [status, deleteTodoMutation]);
 
- const clearAllTodos = useCallback(() => {
+    const clearAllTodos = useCallback(() => {
         if (status === 'authenticated') {
             const apiCall = settings.isWeekDays ?
                 api.deleteTodosByWeekDays(activeDate) :
@@ -218,9 +218,6 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [status, localTodos, updateTodoMutation]);
 
-    
-
-
     const memoizedFunctions = useMemo(() => ({
         addTodo,
         editTodo,
@@ -231,9 +228,9 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         setSpentTime,
         setActiveDate,
         setSelectedTodoId,
-    }), [addTodo, editTodo, toggleTodoComplete, removeTodo, clearAllTodos, getCount, 
+    }), [addTodo, editTodo, toggleTodoComplete, removeTodo, clearAllTodos, getCount,
         setSpentTime, setActiveDate, setSelectedTodoId]);
-    
+
     const value = useMemo(() => ({
         ...memoizedFunctions,
         todos: getFilteredTodos(),
@@ -245,23 +242,6 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isHydrated) {
         return null;
     }
-
-    // const value = {
-    //     todos: getFilteredTodos(),
-    //     activeDate,
-    //     loading: isLoading,
-    //     // error: addTodoMutation.isError || updateTodoMutation.isError || deleteTodoMutation.isError,
-    //     addTodo,
-    //     editTodo,
-    //     toggleTodoComplete,
-    //     removeTodo,
-    //     clearAllTodos,
-    //     getCount,
-    //     setSpentTime,
-    //     setActiveDate,
-    //     setSelectedTodoId,
-    //     selectedTodoId,
-    // };
 
     return (
         <TodosStateContext.Provider value={value}>

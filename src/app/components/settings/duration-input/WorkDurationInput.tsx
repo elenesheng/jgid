@@ -1,9 +1,10 @@
-import React, { useContext, memo} from "react";
+import React, {memo} from "react";
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { MIN_WORK_VALUE, MAX_WORK_VALUE, SECONDS_IN_A_MINUTE } from "@/app/lib/constants";
+import { MIN_WORK_VALUE, MAX_WORK_VALUE } from "@/app/lib/constants";
 import { DurationInputProps } from "@/app/types/settings";
 
 const WorkDurationInput = ({onChange, value}: DurationInputProps) => {
+    console.log("work duration changed")
     return (
         <FormControl mb="md">
             <FormLabel>Work Duration (minutes)</FormLabel>

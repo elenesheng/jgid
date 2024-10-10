@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     Drawer,
     DrawerOverlay,

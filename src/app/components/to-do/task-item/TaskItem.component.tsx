@@ -1,4 +1,4 @@
-import React, { useContext, useRef, memo, useCallback } from "react";
+import React, { useRef, memo, useCallback } from "react";
 import {
     Text,
     Flex,
@@ -13,7 +13,6 @@ import TaskItemMenu from "./TaskItemMenu.component";
 import { secondsToMinutes } from "@/app/lib/utils/timer";
 import { trimText } from "@/app/lib/utils/timer";
 import { MAX_LENGTH_LONG } from "@/app/lib/constants";
-import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
 const TaskItem = memo((task: Todo) => {
     const { name, id, completed } = task;
@@ -25,6 +24,7 @@ const TaskItem = memo((task: Todo) => {
     const handleClick = useCallback(() => {
         onOpen();
     }, [onOpen]);
+
     return (
         <Box border="none" mb="15px" onClick={onOpen} style={{cursor: 'pointer'}}>
             <Flex align="center" w="100%" position="relative" alignItems="flex-start">

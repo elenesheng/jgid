@@ -18,7 +18,6 @@ const TaskItemMenu = memo(({ id, onEdit, completed }: TaskItemMenuProps) => {
     const { removeTodo, toggleTodoComplete, setSelectedTodoId } = useTodosControlls();
     const timer = useContext(TimerStateContext)!;
 
-
     const onComplete = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation();
         if (!timer.isRunning) {

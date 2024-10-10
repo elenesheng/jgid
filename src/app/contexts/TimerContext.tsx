@@ -7,64 +7,15 @@ import { minutesToSeconds } from '@/app/lib/utils/timer';
 import { DEFAULT_WORK_DURATION, DEFAULT_REST_DURATION } from '@/app/lib/constants';
 import { SettingsControls } from '@/app/types/settings';
 import { useRenderTime } from '@/app/hooks/useRenderTime';
+import { timerReducer, settingsReducer } from '../state/timer/timerReducer';
 
 export const TimerStateContext = createContext<TimerState | undefined>(undefined);
 export const SettingsStateContext = createContext<TimerSettings | undefined>(undefined);
 export const TimerControlsContext = createContext<TimerControls | undefined>(undefined);
 export const SettingsControlsContext = createContext<SettingsControls | undefined>(undefined);
 
-const timerReducer = (state: TimerState, action: any): TimerState => {
-  switch (action.type) {
-    case 'START_TIMER':
-      return { ...state, isRunning: true };
-    case 'PAUSE_TIMER':
-      return { ...state, isRunning: false };
-    case 'RESET_WORK_TIMER':
-      return { ...state, workTime: minutesToSeconds(action.payload) };
-    case 'RESET_REST_TIMER':
-      return { ...state, restTime: minutesToSeconds(action.payload) };
-    case 'SET_ACTIVE_TAB':
-      return { ...state, activeTab: action.payload };
-    case 'UPDATE_START_TIME':
-      return { ...state, startTime: action.payload };
-    case "UPDATE_WORK_SESSIONS":
-      return { ...state, workSessions: action.payload };
-    case 'UPDATE_REST_BREAKS':
-      return {...state, restBreaks: action.payload };
-    case 'SET_TIME_LEFT':
-      return {
-        ...state,
-        [action.payload.type === "work" ? "workTime" : "restTime"]: action.payload.seconds,
-      };
-    default:
-      return state
-  }
-}
-
-const settingsReducer = (state: TimerSettings, action: any): TimerSettings => {
-  switch (action.type) {
-    case 'SET_SOUND':
-      return { ...state, sound: action.payload };
-    case 'SET_GOAL':
-      return { ...state, goal: action.payload };
-    case 'SET_WHITE_NOISE':
-      return { ...state, isWhiteNoise: action.payload };
-    case 'TOGGLE_AUTO_REST':
-      return { ...state, isAutoRest: !state.isAutoRest };
-    case "SET_WEEKDAYS":
-      return { ...state, isWeekDays: action.payload };
-    case "UPDATE_WORK_DURATION":
-      return { ...state, workDuration: action.payload };
-    case "UPDATE_REST_DURATION":
-      return { ...state, restDuration: action.payload };
-    default:
-      return state;
-  }
-}
-
 export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useRenderTime('TimerProvider');
-  console.log("timer provider")
 
   const [timerState, setTimerState] = useLocalStorage<TimerState>("timer", {
     workTime: minutesToSeconds(DEFAULT_WORK_DURATION),
@@ -77,11 +28,8 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
 
   const [settingsState, setSettingsState] = useLocalStorage<TimerSettings>("timer-settings", {
-    // isRunning: false,
     workDuration: DEFAULT_WORK_DURATION,
     restDuration: DEFAULT_REST_DURATION,
-    // // restBreaks: 0,
-    // workSessions: 0,
     sound: "",
     goal: 0,
     isWhiteNoise: false,

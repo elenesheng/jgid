@@ -4,8 +4,8 @@ import React from "react";
 import { Box, Flex, Container } from "@chakra-ui/react";
 import Logo from "./Logo/Logo";
 import ThemeSwitcher from "@/app/components/theme/Theme";
-import UserProfile from "../AuthButton";
-import SettingsModal from "../settings/Settings.component";
+import UserProfile from "@/app/components/AuthButton";
+import SettingsModal from "@/app/components/settings/Settings.component";
 
 const Header = () => (
   <Box

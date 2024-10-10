@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, memo, useMemo, useRef, useEffect } from "react";
+import React, { useMemo } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -23,7 +23,7 @@ import { useSettings } from "@/app/hooks/useSettings";
 import WorkDurationInput from "./duration-input/WorkDurationInput";
 import RestDurationInput from "./duration-input/RestDurationInput";
 
-const SettingsModal = memo(() => {
+const SettingsModal = () => {
     useRenderTime("Settings");
     const { status } = useSession();
     const {
@@ -40,11 +40,22 @@ const SettingsModal = memo(() => {
         handleIsWeekdaysChange
     } = useSettings();
 
+    const weekdaysCheckbox = useMemo(() => {
+        if (status === "authenticated") {
+            return (
+                <SettingsCheckbox
+                    isChecked={formState.isWeekDays}
+                    onChange={handleIsWeekdaysChange}
+                    label="Manage tasks by week days"
+                />
+            );
+        }
+        return null;
+    }, [status, formState.isWeekDays, handleIsWeekdaysChange]);
+
     return (
         <Box textAlign="right">
-            <button
-                onClick={handleOpen}
-            >
+            <button onClick={handleOpen}>
                 <FaCog color="#019963" />
             </button>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -57,12 +68,13 @@ const SettingsModal = memo(() => {
                             <WorkDurationInput onChange={handleWorkChange} value={formState.workDuration} />
                             <RestDurationInput onChange={handleRestChange} value={formState.restDuration} />
                             <Goals  onGoalChange={handleGoalChange} goal={formState.goal} />
-                            {/* <SettingsCheckbox
+                            <SettingsCheckbox
                                 isChecked={formState.isWhiteNoise}
                                 onChange={handleWhiteNoiseToggle}
                                 label="Work with white noise"
-                            /> */}
+                            />
                             <SoundList setSelectedSound={handleSound} selectedSound={formState.sound}/>
+                            {weekdaysCheckbox}
                             {/* {status === "authenticated" && (
                                 <SettingsCheckbox
                                     isChecked={formState.isWeekDays}
@@ -77,6 +89,6 @@ const SettingsModal = memo(() => {
             </Modal>
         </Box>
     );
-});
+};
 
 export default SettingsModal;

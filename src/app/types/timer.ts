@@ -11,7 +11,6 @@ export interface TimerState {
 export interface TimerSettings {
     workDuration: number;
     restDuration: number;
-    // isRunning: boolean;
     sound: string;
     goal: number;
     isWhiteNoise: boolean;
