@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, memo, useCallback } from "react";
 import {
     Text,
     Flex,
@@ -15,13 +15,16 @@ import { trimText } from "@/app/lib/utils/timer";
 import { MAX_LENGTH_LONG } from "@/app/lib/constants";
 import { SettingsStateContext } from "@/app/contexts/TimerContext";
 
-const TaskItem = (task: Todo) => {
+const TaskItem = memo((task: Todo) => {
     const { name, id, completed } = task;
     const { isOpen, onClose, onOpen } = useDisclosure();
     const editorRef = useRef(null);
 
     const calcWidth = `calc(100% - 126px);`;
 
+    const handleClick = useCallback(() => {
+        onOpen();
+    }, [onOpen]);
     return (
         <Box border="none" mb="15px" onClick={onOpen} style={{cursor: 'pointer'}}>
             <Flex align="center" w="100%" position="relative" alignItems="flex-start">
@@ -57,13 +60,13 @@ const TaskItem = (task: Todo) => {
                 <TaskItemMenu
                     id={id}
                     completed ={completed}
-                    onEdit={onOpen}
+                    onEdit={handleClick}
                 />
             </Flex>
 
             <EditTaskDrawer task={task} isOpen={isOpen} onClose={onClose} editorRef={editorRef} />
         </Box>
     );
-};
+});
 
 export default TaskItem;

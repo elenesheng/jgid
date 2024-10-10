@@ -1,8 +1,8 @@
-import React from "react";
+import React, {memo} from "react";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
 import { SettingsCheckboxProps } from "@/app/types/settings";
 
-const SettingsCheckbox = ({ isChecked, onChange, label }: SettingsCheckboxProps) => {
+const SettingsCheckbox = memo<SettingsCheckboxProps>(({ isChecked, onChange, label }: SettingsCheckboxProps) => {
     return (
         <CheckboxGroup >
             <Checkbox mb="md" isChecked={isChecked} onChange={onChange}>
@@ -10,6 +10,7 @@ const SettingsCheckbox = ({ isChecked, onChange, label }: SettingsCheckboxProps)
             </Checkbox>
         </CheckboxGroup>
     );
-};
+});
 
+SettingsCheckbox.displayName = 'SettingsCheckbox';
 export default SettingsCheckbox;

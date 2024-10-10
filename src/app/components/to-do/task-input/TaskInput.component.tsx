@@ -3,11 +3,12 @@ import { TaskInputProps, WeekDay } from '@/app/types/tasks';
 import React from 'react';
 import { Flex, Input, Button, Select, Box } from '@chakra-ui/react';
 import { WEEK_DAYS } from '@/app/lib/constants';
-import { useTodos } from "@/app/hooks/useTodos";
+import { useTodos, useTodosControlls } from "@/app/hooks/useTodos";
 
 const TaskInput = () => {
     const [taskName, setTaskName] = useState<string>('');
-    const { todos, addTodo, clearAllTodos } = useTodos();
+    const { addTodo, clearAllTodos } = useTodosControlls();
+    const { todos } = useTodos();
 
     const handleAddTask = () => {
         if (taskName) {

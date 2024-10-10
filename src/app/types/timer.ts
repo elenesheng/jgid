@@ -3,20 +3,31 @@ export interface TimerState {
     restTime: number;
     startTime: number;
     activeTab: string;
+    isRunning: boolean;
+    workSessions: number;
+    restBreaks: number;
 }
 
 export interface TimerSettings {
     workDuration: number;
     restDuration: number;
-    restBreaks: number;
-    workSessions: number;
-    isRunning: boolean;
+    // isRunning: boolean;
     sound: string;
     goal: number;
     isWhiteNoise: boolean;
     isAutoRest: boolean;
     isWeekDays: boolean;
 }
+
+export interface SettingsForm {
+    workDuration: number;
+    restDuration: number;
+    sound: string;
+    goal: number;
+    isWhiteNoise: boolean;
+    isWeekDays: boolean;
+}
+
 export interface TimerContextType {
     timer: TimerState;
     settings: TimerSettings;
@@ -44,6 +55,8 @@ export interface TimerControls {
     setActiveTab: (activeTab: string) => void;
     setTimeLeft: (seconds: number, type: string) => void;
     updateStartTime: (seconds: number) => void;
+    updateRestBreak: () => void;
+    updateWorkSessions: () => void;
 }
 
 export interface TimerTabsProps {

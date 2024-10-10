@@ -4,8 +4,8 @@ import React from "react";
 import { Box, Flex, Container } from "@chakra-ui/react";
 import Logo from "./Logo/Logo";
 import ThemeSwitcher from "@/app/components/theme/Theme";
-import SettingsModalContainer from "../settings";
 import UserProfile from "../AuthButton";
+import SettingsModal from "../settings/Settings.component";
 
 const Header = () => (
   <Box
@@ -19,7 +19,7 @@ const Header = () => (
     <Container maxW="container.xl">
       <Flex justifyContent="space-between" alignItems="center" p={0}>
         <Flex alignItems="center" flex="1">
-          <SettingsModalContainer />
+          <SettingsModal />
           <ThemeSwitcher />
         </Flex>
 

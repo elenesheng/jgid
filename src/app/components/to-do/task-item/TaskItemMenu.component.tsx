@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, memo } from 'react';
 import {
     Menu,
     MenuButton,
@@ -11,17 +11,17 @@ import {
 import { DeleteIcon, EditIcon, CheckIcon } from '@chakra-ui/icons';
 import { FaEllipsisV } from 'react-icons/fa';
 import { TaskItemMenuProps } from '@/app/types/tasks';
-import { SettingsStateContext } from "@/app/contexts/TimerContext";
-import { useTodos } from "@/app/hooks/useTodos";
+import { TimerStateContext } from "@/app/contexts/TimerContext";
+import { useTodosControlls } from "@/app/hooks/useTodos";
 
-const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
-    const { removeTodo, toggleTodoComplete, setSelectedTodoId } = useTodos();
-    const settings = useContext(SettingsStateContext)!;
+const TaskItemMenu = memo(({ id, onEdit, completed }: TaskItemMenuProps) => {
+    const { removeTodo, toggleTodoComplete, setSelectedTodoId } = useTodosControlls();
+    const timer = useContext(TimerStateContext)!;
 
 
     const onComplete = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation();
-        if (!settings.isRunning) {
+        if (!timer.isRunning) {
             setSelectedTodoId("");
         }
         toggleTodoComplete(id);
@@ -59,6 +59,6 @@ const TaskItemMenu = ({ id, onEdit, completed }: TaskItemMenuProps) => {
             </MenuList>
         </Menu>
     );
-};
+});
 
 export default TaskItemMenu;

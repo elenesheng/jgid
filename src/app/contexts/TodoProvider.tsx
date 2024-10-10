@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo, useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSession } from "next-auth/react";
 import { v4 as uuidv4 } from "uuid";
@@ -10,7 +10,7 @@ import { Todo } from "@/app/types/tasks";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { getCurrentWeekday } from "../lib/utils/helper";
 import { SettingsStateContext } from "./TimerContext";
-import { TodosContext } from "./TodoContext";
+import { TodosStateContext, TodosControlsContext } from "./TodoContext";
 
 const queue = new PQueue({ concurrency: 1 });
 
@@ -94,53 +94,46 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         },
     });
 
-    if (!isHydrated) {
-        return null;
-    }
+    const addTodo = useCallback((name: string, description: string) => {
+        const newTodo = {
+            id: uuidv4(),
+            name,
+            description,
+            completed: false,
+            spentTime: 0,
+            weekday: activeDate,
+        };
 
-    const addTodo =
-        (name: string, description: string) => {
-            const newTodo = {
-                id: uuidv4(),
-                name,
-                description,
-                completed: false,
-                spentTime: 0,
-                weekday: activeDate,
-            };
+        setLocalTodos((prevTodos) => [...prevTodos, newTodo]);
 
-            setLocalTodos((prevTodos) => [...prevTodos, newTodo]);
-
-            if (status === 'authenticated') {
-                queue.add(() =>
-                    addTodoMutation.mutateAsync(newTodo).catch((error) => {
-                        console.error('Error in adding todo:', error);
-                    })
-                );
-            }
+        if (status === 'authenticated') {
+            queue.add(() =>
+                addTodoMutation.mutateAsync(newTodo).catch((error) => {
+                    console.error('Error in adding todo:', error);
+                })
+            );
         }
+    }, [activeDate, status, addTodoMutation]);
 
+    const editTodo = useCallback((todoId: string, name: string, description: string) => {
+        const todoToUpdate = localTodos.find((todo) => todo.id === todoId);
+        if (todoToUpdate) {
+            const updatedTodo = { ...todoToUpdate, name, description };
 
-    const editTodo =
-        (todoId: string, name: string, description: string) => {
-            const todoToUpdate = localTodos.find((todo) => todo.id === todoId);
-            if (todoToUpdate) {
-                const updatedTodo = { ...todoToUpdate, name, description };
+            queue.add(() =>
+                updateTodoMutation.mutateAsync(updatedTodo).catch((error) => {
+                    console.error('Error in updating todo:', error);
+                })
+            );
 
-                queue.add(() =>
-                    updateTodoMutation.mutateAsync(updatedTodo).catch((error) => {
-                        console.error('Error in updating todo:', error);
-                    })
-                );
-
-                setLocalTodos((prevTodos) =>
-                    prevTodos.map((todo) => (todo.id === todoId ? updatedTodo : todo))
-                );
-            }
+            setLocalTodos((prevTodos) =>
+                prevTodos.map((todo) => (todo.id === todoId ? updatedTodo : todo))
+            );
         }
+    }, [localTodos, updateTodoMutation]);
 
 
-    const toggleTodoComplete = (todoId: string) => {
+    const toggleTodoComplete = useCallback((todoId: string) => {
         setLocalTodos((prevTodos) =>
             prevTodos.map(todo =>
                 todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
@@ -157,9 +150,9 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
                 );
             }
         }
-    }
+    }, [status, localTodos, updateTodoMutation]);
 
-    const removeTodo = (todoId: string) => {
+    const removeTodo = useCallback((todoId: string) => {
         if (status === 'authenticated') {
             queue.add(() =>
                 deleteTodoMutation.mutateAsync(todoId).catch((error) => {
@@ -169,9 +162,9 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
             setLocalTodos((prevTodos) => prevTodos.filter(todo => todo.id !== todoId));
         }
-    }
+    }, [status, deleteTodoMutation]);
 
-    const clearAllTodos = () => {
+ const clearAllTodos = useCallback(() => {
         if (status === 'authenticated') {
             const apiCall = settings.isWeekDays ?
                 api.deleteTodosByWeekDays(activeDate) :
@@ -193,20 +186,20 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
                 []
             );
         }
-    };
+    }, [status, settings.isWeekDays, activeDate, queryClient]);
 
-    const getFilteredTodos = () => {
+    const getFilteredTodos = useCallback(() => {
         if (settings.isWeekDays) {
             return localTodos.filter(todo => todo.weekday === activeDate);
         }
         return localTodos;
-    };
+    }, [settings.isWeekDays, localTodos, activeDate]);
 
-    const getCount = (weekday: string) => {
+    const getCount = useCallback((weekday: string) => {
         return localTodos?.filter(todo => todo.weekday === weekday).length;
-    };
+    }, [localTodos]);
 
-    const setSpentTime = (todoId: string, spentTime: number) => {
+    const setSpentTime = useCallback((todoId: string, spentTime: number) => {
         setLocalTodos((prevTodos) =>
             prevTodos.map(todo =>
                 todo.id === todoId ? { ...todo, spentTime: (todo.spentTime || 0) + spentTime } : todo
@@ -223,15 +216,12 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
                 );
             }
         }
-    };
+    }, [status, localTodos, updateTodoMutation]);
+
+    
 
 
-
-    const value = {
-        todos: getFilteredTodos(),
-        activeDate,
-        loading: isLoading,
-        // error: addTodoMutation.isError || updateTodoMutation.isError || deleteTodoMutation.isError,
+    const memoizedFunctions = useMemo(() => ({
         addTodo,
         editTodo,
         toggleTodoComplete,
@@ -241,12 +231,43 @@ export const TodosProvider = ({ children }: { children: React.ReactNode }) => {
         setSpentTime,
         setActiveDate,
         setSelectedTodoId,
+    }), [addTodo, editTodo, toggleTodoComplete, removeTodo, clearAllTodos, getCount, 
+        setSpentTime, setActiveDate, setSelectedTodoId]);
+    
+    const value = useMemo(() => ({
+        ...memoizedFunctions,
+        todos: getFilteredTodos(),
+        activeDate,
+        loading: isLoading,
         selectedTodoId,
-    };
+    }), [memoizedFunctions, getFilteredTodos, activeDate, isLoading, selectedTodoId]);
+
+    if (!isHydrated) {
+        return null;
+    }
+
+    // const value = {
+    //     todos: getFilteredTodos(),
+    //     activeDate,
+    //     loading: isLoading,
+    //     // error: addTodoMutation.isError || updateTodoMutation.isError || deleteTodoMutation.isError,
+    //     addTodo,
+    //     editTodo,
+    //     toggleTodoComplete,
+    //     removeTodo,
+    //     clearAllTodos,
+    //     getCount,
+    //     setSpentTime,
+    //     setActiveDate,
+    //     setSelectedTodoId,
+    //     selectedTodoId,
+    // };
 
     return (
-        <TodosContext.Provider value={value}>
-            {children}
-        </TodosContext.Provider>
+        <TodosStateContext.Provider value={value}>
+            <TodosControlsContext.Provider value={memoizedFunctions}>
+                {children}
+            </TodosControlsContext.Provider>
+        </TodosStateContext.Provider>
     );
 };

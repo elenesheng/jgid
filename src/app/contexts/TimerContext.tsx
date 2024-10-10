@@ -15,6 +15,10 @@ export const SettingsControlsContext = createContext<SettingsControls | undefine
 
 const timerReducer = (state: TimerState, action: any): TimerState => {
   switch (action.type) {
+    case 'START_TIMER':
+      return { ...state, isRunning: true };
+    case 'PAUSE_TIMER':
+      return { ...state, isRunning: false };
     case 'RESET_WORK_TIMER':
       return { ...state, workTime: minutesToSeconds(action.payload) };
     case 'RESET_REST_TIMER':
@@ -23,6 +27,10 @@ const timerReducer = (state: TimerState, action: any): TimerState => {
       return { ...state, activeTab: action.payload };
     case 'UPDATE_START_TIME':
       return { ...state, startTime: action.payload };
+    case "UPDATE_WORK_SESSIONS":
+      return { ...state, workSessions: action.payload };
+    case 'UPDATE_REST_BREAKS':
+      return {...state, restBreaks: action.payload };
     case 'SET_TIME_LEFT':
       return {
         ...state,
@@ -35,10 +43,6 @@ const timerReducer = (state: TimerState, action: any): TimerState => {
 
 const settingsReducer = (state: TimerSettings, action: any): TimerSettings => {
   switch (action.type) {
-    case 'START_TIMER':
-      return { ...state, isRunning: true };
-    case 'PAUSE_TIMER':
-      return { ...state, isRunning: false };
     case 'SET_SOUND':
       return { ...state, sound: action.payload };
     case 'SET_GOAL':
@@ -60,20 +64,24 @@ const settingsReducer = (state: TimerSettings, action: any): TimerSettings => {
 
 export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   useRenderTime('TimerProvider');
+  console.log("timer provider")
 
   const [timerState, setTimerState] = useLocalStorage<TimerState>("timer", {
     workTime: minutesToSeconds(DEFAULT_WORK_DURATION),
     restTime: minutesToSeconds(DEFAULT_REST_DURATION),
     startTime: 0,
     activeTab: "work",
+    isRunning: false,
+    workSessions: 0,
+    restBreaks: 0,
   });
 
   const [settingsState, setSettingsState] = useLocalStorage<TimerSettings>("timer-settings", {
-    isRunning: false,
+    // isRunning: false,
     workDuration: DEFAULT_WORK_DURATION,
     restDuration: DEFAULT_REST_DURATION,
-    restBreaks: 0,
-    workSessions: 0,
+    // // restBreaks: 0,
+    // workSessions: 0,
     sound: "",
     goal: 0,
     isWhiteNoise: false,
@@ -84,6 +92,9 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [timer, timerDispatch] = useReducer(timerReducer, timerState);
   const [settings, settingsDispatch] = useReducer(settingsReducer, settingsState);
 
+  const memoizedTimerState = useMemo(() => timer, [timer]);
+  const memoizedSettingsState = useMemo(() => settings, [settings]);
+
   useMemo(() => {
     setTimerState(timer);
   }, [timer, setTimerState]);
@@ -93,16 +104,18 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [settings, setSettingsState]);
 
   const timerControls = useMemo(() => ({
-    startTimer: () => settingsDispatch({ type: "START_TIMER" }),
-    pauseTimer: () => settingsDispatch({ type: "PAUSE_TIMER" }),
+    startTimer: () => timerDispatch({ type: "START_TIMER" }),
+    pauseTimer: () => timerDispatch({ type: "PAUSE_TIMER" }),
     resetWorkTimer: () => {
-      settingsDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "PAUSE_TIMER" });
       timerDispatch({ type: "RESET_WORK_TIMER", payload: settingsState.workDuration });
     },
     resetRestTimer: () => {
-      settingsDispatch({ type: "PAUSE_TIMER" });
+      timerDispatch({ type: "PAUSE_TIMER" });
       timerDispatch({ type: "RESET_REST_TIMER", payload: settingsState.restDuration });
     },
+    updateWorkSessions: () => timerDispatch({ type: "UPDATE_WORK_SESSIONS" }),
+    updateRestBreak: () => timerDispatch({type: "UPDATE_REST_BREAK"}),
     setActiveTab: (activeTab: string) => timerDispatch({ type: "SET_ACTIVE_TAB", payload: activeTab }),
     updateStartTime: (seconds: number) => timerDispatch({ type: "UPDATE_START_TIME", payload: seconds }),
     setTimeLeft: (seconds: number, type: string) => timerDispatch({
@@ -115,17 +128,21 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setSound: (sound_id: string) => settingsDispatch({ type: "SET_SOUND", payload: sound_id }),
     setGoal: (goals: number) => settingsDispatch({ type: "SET_GOAL", payload: goals }),
     setWhiteNoise: (isWhiteNoise: boolean) => settingsDispatch({ type: "SET_WHITE_NOISE", payload: isWhiteNoise }),
-    updateRestBreak: () => settingsDispatch({ type: "UPDATE_REST_BREAKS" }),
-    updateWorkSessions: () => settingsDispatch({ type: "UPDATE_WORK_SESSIONS" }),
-    updateWorkDuration: (minutes: number) => settingsDispatch({ type: "UPDATE_WORK_DURATION", payload: minutes }),
-    updateRestDuration: (minutes: number) => settingsDispatch({ type: "UPDATE_REST_DURATION", payload: minutes }),
+    updateWorkDuration: (minutes: number) => {
+      settingsDispatch({ type: "UPDATE_WORK_DURATION", payload: minutes });
+      timerDispatch({ type: "RESET_WORK_TIMER", payload: minutes });
+  },
+  updateRestDuration: (minutes: number) => {
+      settingsDispatch({ type: "UPDATE_REST_DURATION", payload: minutes });
+      timerDispatch({ type: "RESET_REST_TIMER", payload: minutes });
+  },
     setAutoRest: () => settingsDispatch({ type: "TOGGLE_AUTO_REST" }),
     setIsWeekDays: (isWeekDays: boolean) => settingsDispatch({ type: "SET_WEEKDAYS", payload: isWeekDays }),
   }), []);
 
   return (
-    <TimerStateContext.Provider value={timerState}>
-      <SettingsStateContext.Provider value={settingsState}>
+    <TimerStateContext.Provider value={memoizedTimerState}>
+      <SettingsStateContext.Provider value={memoizedSettingsState}>
         <TimerControlsContext.Provider value={timerControls}>
           <SettingsControlsContext.Provider value={settingsControls}>
             {children}
@@ -135,3 +152,4 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     </TimerStateContext.Provider>
   );
 };
+

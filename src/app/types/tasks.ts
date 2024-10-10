@@ -41,6 +41,19 @@ export interface TodosContextType {
     activeDate: string;
     loading: boolean;
     // error: Error | null;
+    // addTodo: (name: string, description: string) => void;
+    // editTodo: (todoId: string, name: string, description: string) => void;
+    // toggleTodoComplete: (todoId: string) => void;
+    // removeTodo: (todoId: string) => void;
+    // clearAllTodos: () => void;
+    // getCount: (weekday: string) => number;
+    // setSpentTime: (todoId: string, spentTime: number) => void;
+    // setActiveDate: (date: string) => void;
+    // setSelectedTodoId: (id: string) => void;
+    selectedTodoId: string;
+}
+
+export interface TodosControls {
     addTodo: (name: string, description: string) => void;
     editTodo: (todoId: string, name: string, description: string) => void;
     toggleTodoComplete: (todoId: string) => void;
@@ -50,7 +63,6 @@ export interface TodosContextType {
     setSpentTime: (todoId: string, spentTime: number) => void;
     setActiveDate: (date: string) => void;
     setSelectedTodoId: (id: string) => void;
-    selectedTodoId: string;
 }
 
 export type QueuedOperation = {
